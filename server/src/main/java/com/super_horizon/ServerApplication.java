@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.super_horizon;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
