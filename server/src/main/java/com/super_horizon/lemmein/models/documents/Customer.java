@@ -1,7 +1,9 @@
-package com.super_horizon.model.collection;
+package com.super_horizon.lemmein.model.document;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
+@Document(collection = "customers")
 public class Customer {
     
     @Id
