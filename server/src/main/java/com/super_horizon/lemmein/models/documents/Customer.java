@@ -1,4 +1,4 @@
-package com.super_horizon.lemmein.model.document;
+package com.super_horizon.lemmein.models.documents;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
