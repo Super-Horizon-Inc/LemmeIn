@@ -1,9 +1,8 @@
 package com.super_horizon.lemmein.models.repositories;
 
-import java.util.List;
-import org.bson.Document;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
 
 public interface IRepository<T> {
-    // List<Document> query(String documentName, String queryString);
-    List<T> findOrCreate(String documentName, Document query);
+    List<T> findOrCreate(Map<String, String> query) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException;
 }
