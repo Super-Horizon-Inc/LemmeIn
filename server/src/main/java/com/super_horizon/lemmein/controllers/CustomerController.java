@@ -1,62 +1,29 @@
 package com.super_horizon.lemmein.controllers;
 
+import java.util.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import com.super_horizon.lemmein.models.documents.Customer;
-import com.super_horizon.lemmein.models.repositories.CustomerRepository;
+import com.super_horizon.lemmein.services.CustomerService;
 import org.springframework.http.ResponseEntity;
-import java.util.*;
-import org.bson.Document;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 @RequestMapping("/lemmein/customers")
 public class CustomerController {
 
     @Autowired
-    CustomerRepository customerRepository;
+    private CustomerService customerService;
 
-    //@GetMapping("/{queryString}")
     @PostMapping
-    public ResponseEntity<List<Customer>> findOrCreate(@RequestBody Document query) {
+    public ResponseEntity<List<Customer>> searchOrAdd(@RequestBody Map<String, String> query) {
         try {
-            List<Document> documents = customerRepository.findOrCreate("customers", query);
-            List<Customer> customers = new ArrayList<>();
 
-            // using for-each loop for iteration over returned documents
-            // and convert each to a customer object
-            for (Document document : documents) {
-                Customer customer = new Customer();
-                for (Map.Entry<String, Object> entry : document.entrySet()) {
-                    switch(entry.getKey()) {
-                        case "id" : {
-
-                            break;
-                        }
-                        case "phoneNumber" : {
-                            customer.setPhoneNumber((String)entry.getValue());
-                            break;
-                        }
-                        case "email" : {
-                            customer.setEmail((String)entry.getValue());
-                            break;
-                        }
-                        case "dob" : {
-                            customer.setDOB((String)entry.getValue());
-                            break;
-                        }
-                        case "firstName" : {
-                            customer.setFirstName((String)entry.getValue());
-                            break;
-                        }
-                        case "lastName" : {
-                            customer.setLastName((String)entry.getValue());
-                            break;
-                        }
-                    }
-                }
-                customers.add(customer);
-            }
+            List<Customer> customers = customerService.searchOrAdd(query);
 
             if (customers.isEmpty()) {
                 return new ResponseEntity<> (null, HttpStatus.EXPECTATION_FAILED);
@@ -66,36 +33,43 @@ public class CustomerController {
 
         }
         catch (Exception ex) {
-            System.out.println(query);
             return new ResponseEntity<> (null, HttpStatus.EXPECTATION_FAILED);
         }
     }
 
-    // @GetMapping
-    // public ResponseEntity<List<Customer>> findCustomers(@RequestParam(required = false) String phoneNumber, 
-    //                                                     @RequestParam(required = false) String email) 
-    // {
-    //     try {
-    //         List<Customer> customers = new ArrayList<Customer>();
+    @GetMapping(value="/{id}")
+    public ResponseEntity<Customer> searchById(@PathVariable String id) {
 
-    //         if (phoneNumber == null && email == null) {
-    //             customerRepository.findAll().forEach(customers::add);
-    //         }
-    //         else if (email == null) {
-    //             customerRepository.findByPhoneNumber(phoneNumber).forEach(customers::add);
-    //         }
-    //         else {
-    //             customerRepository.findByEmail(email).forEach(customers::add);
-    //         }
+        try {
+            Customer _customer = customerService.searchById(id);
+            return new ResponseEntity<> (_customer, HttpStatus.OK);
+        }
+        catch (Exception e) {
+            return new ResponseEntity<> (null, HttpStatus.EXPECTATION_FAILED);
+        }
+    }
 
-    //         if (customers.isEmpty()) {
-    //             return new ResponseEntity<> (HttpStatus.NO_CONTENT);
-    //         }
-    //         return new ResponseEntity<> (customers, HttpStatus.OK);
-    //     }
-    //     catch (Exception ex) {
-    //         return new ResponseEntity<> (HttpStatus.INTERNAL_SERVER_ERROR);
-    //     }
-    // }
+    @GetMapping
+    public ResponseEntity<List<Customer>> searchAll() {
+        try {
+            List<Customer> customers = customerService.searchAll();          
+            return new ResponseEntity<> (customers, HttpStatus.OK);
+        }
+        catch (Exception ex) {
+            return new ResponseEntity<> (null, HttpStatus.EXPECTATION_FAILED);
+        }
+    }
+
+    @PutMapping(value="/{id}")
+    public ResponseEntity<Customer> edit(@PathVariable String id, @RequestBody Customer customer) {
+        try {
+            Customer _customer = customerService.edit(id, customer);
+            return new ResponseEntity<> (_customer, HttpStatus.OK);
+        }
+        catch (Exception e) {
+            return new ResponseEntity<> (null, HttpStatus.EXPECTATION_FAILED);
+        }
+        
+    }
     
 }

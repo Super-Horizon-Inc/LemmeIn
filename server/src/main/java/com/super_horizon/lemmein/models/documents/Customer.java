@@ -2,6 +2,7 @@ package com.super_horizon.lemmein.models.documents;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import java.util.*;
 
 @Document(collection = "customers")
 public class Customer {
@@ -9,18 +10,29 @@ public class Customer {
     @Id
     private String id;
 
-    private String phoneNumer;
+    private String phoneNumber;
     private String email;
     private String dob;
     private String firstName;
     private String lastName;
 
+    public Customer() {};
+
+    public Customer(Map<String, String> params) {
+        this.phoneNumber = params.get("phoneNumber");
+        this.email = params.get("email");
+    }
+
+    public String getId() {
+        return this.id;
+    }
+
     public void setPhoneNumber(final String phoneNumber) {
-        this.phoneNumer = phoneNumber;
+        this.phoneNumber = phoneNumber;
     }
 
     public String getPhoneNumber() {
-        return this.phoneNumer;
+        return this.phoneNumber;
     } 
 
     public void setEmail(final String email) {
