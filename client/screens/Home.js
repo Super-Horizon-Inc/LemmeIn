@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { KeyboardAvoidingView, StyleSheet, View, Platform } from 'react-native';
+import { KeyboardAvoidingView, StyleSheet, View, Platform, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Input, ButtonGroup, Button } from 'react-native-elements';
 import Logo from './Logo.js';
@@ -86,8 +86,28 @@ export default class Home extends Component {
     };
 
     lemmeIn () {
-        const selectedIndex = this.state.selectedIndex;
-        this.props.navigation.navigate("CustomerScreen", {selectedIndex: selectedIndex});
+        
+        fetch('https://73e7d73f0f16.ngrok.io/lemmein/customers', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type' : 'application/json'
+            },
+            body: this.state.selectedIndex == 0 ? JSON.stringify({phoneNumber:this.state.input}) : JSON.stringify({email:this.state.input})
+        })
+        .then(response => 
+            response.json()
+        )
+        .then(json => {
+            //const selectedIndex = this.state.selectedIndex;
+            //this.props.navigation.navigate("CustomerScreen", {selectedIndex: selectedIndex});
+
+            const link = "http://localhost:8080/lemmein/customers/" + json[0].id;
+            Alert.alert("this is your link", link);
+        })
+        .catch(error => {
+            console.error(error);
+        });      
     };
 
     render () {
