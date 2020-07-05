@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { KeyboardAvoidingView, StyleSheet, View, Platform, Alert } from 'react-native';
+import { KeyboardAvoidingView, StyleSheet, View, Platform } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Input, ButtonGroup, Button } from 'react-native-elements';
 import Logo from './Logo.js';
+import Confirm from './Confirm.js';
 
 const styles = StyleSheet.create({
     container: {
@@ -41,6 +42,8 @@ export default class Home extends Component {
             keyboardType: "phone-pad",
             returnKeyType: {returnKeyType:'done'}, // setting returnKeyType property at runtime - dynamically
             input: "",
+            isConfirmVisible: false,
+            confirmText: "",
         };
 
         /**
@@ -87,13 +90,20 @@ export default class Home extends Component {
 
     lemmeIn () {
         
-        fetch('https://73e7d73f0f16.ngrok.io/lemmein/customers', {
+        const isPhoneNumber = this.state.selectedIndex == 0 ? true : false;
+        const confirmSubtext = isPhoneNumber ? "a message to: " : "an email to: ";
+        this.setState({
+            isConfirmVisible: true, 
+            confirmText: "Please wait. We are sending \n" + confirmSubtext + this.state.input,
+        });
+
+        fetch('https://5916aaf91162.ngrok.io/lemmein/customers', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
                 'Content-Type' : 'application/json'
             },
-            body: this.state.selectedIndex == 0 ? JSON.stringify({phoneNumber:this.state.input}) : JSON.stringify({email:this.state.input})
+            body: isPhoneNumber ? JSON.stringify({phoneNumber:this.state.input}) : JSON.stringify({email:this.state.input})
         })
         .then(response => 
             response.json()
@@ -102,10 +112,32 @@ export default class Home extends Component {
             //const selectedIndex = this.state.selectedIndex;
             //this.props.navigation.navigate("CustomerScreen", {selectedIndex: selectedIndex});
 
-            const link = "http://localhost:8080/lemmein/customers/" + json[0].id;
-            Alert.alert("this is your link", link);
+            if (json[0].isNew) {
+
+                this.setState({
+                    isConfirmVisible: true, 
+                    confirmText: "Email was sent successfully."
+                });
+                              
+                setTimeout(() => {
+                    this.setState({
+                        isConfirmVisible: false, 
+                        confirmText: "",
+                    });
+                }, 5000);
+            }
         })
         .catch(error => {
+            this.setState({
+                isConfirmVisible: true, 
+                confirmText: "Sorry! Something went wrong."
+            });
+            setTimeout(() => {
+                this.setState({
+                    isConfirmVisible: false, 
+                    confirmText: "",
+                });
+            }, 5000);
             console.error(error);
         });      
     };
@@ -128,6 +160,7 @@ export default class Home extends Component {
                                     }
                                     style={styles.container}>
                 <View style={styles.inner}>
+                    <Confirm isVisible = {this.state.isConfirmVisible} text = {this.state.confirmText} />
                     <Logo />
                     <View>
                         <View>
