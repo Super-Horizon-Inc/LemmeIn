@@ -15,12 +15,14 @@ public class Customer {
     private String dob;
     private String firstName;
     private String lastName;
+    private Boolean isNew;
 
     public Customer() {};
 
     public Customer(Map<String, String> params) {
         this.phoneNumber = params.get("phoneNumber");
         this.email = params.get("email");
+        this.isNew = true;
     }
 
     public String getId() {
@@ -66,5 +68,13 @@ public class Customer {
     public String getLastName() {
         return this.lastName;
     } 
+
+    public void setIsNew(Boolean isNew) {
+        this.isNew = isNew;
+    }
+
+    public Boolean getIsNew() {
+        return this.isNew;
+    }
     
 }

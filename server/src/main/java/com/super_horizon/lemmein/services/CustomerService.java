@@ -1,7 +1,6 @@
 package com.super_horizon.lemmein.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import com.super_horizon.lemmein.models.repositories.CustomerRepository;
 import com.super_horizon.lemmein.models.documents.*;
@@ -11,7 +10,7 @@ import java.util.*;
 public class CustomerService {
 
     @Autowired
-    CustomerRepository customerRepository;
+    private CustomerRepository customerRepository;
 
     public List<Customer> searchOrAdd(Map<String, String> query) {
 
