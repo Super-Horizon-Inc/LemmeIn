@@ -7,6 +7,8 @@ import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import com.super_horizon.lemmein.models.documents.Customer;
 import com.super_horizon.lemmein.services.CustomerService;
+import com.super_horizon.lemmein.services.EmailService;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,14 +21,18 @@ public class CustomerController {
     @Autowired
     private CustomerService customerService;
 
+    @Autowired
+    private EmailService emailService;
+
     @PostMapping
     public ResponseEntity<List<Customer>> searchOrAdd(@RequestBody Map<String, String> query) {
         try {
 
             List<Customer> customers = customerService.searchOrAdd(query);
+            Customer customer = customers.get(0);
 
-            if (customers.isEmpty()) {
-                return new ResponseEntity<> (null, HttpStatus.EXPECTATION_FAILED);
+            if (customer.getIsNew() && customer.getEmail() != null) {
+                emailService.sendEmail(customer.getEmail(), customer.getId());
             }
 
             return new ResponseEntity<> (customers, HttpStatus.CREATED);
@@ -68,8 +74,17 @@ public class CustomerController {
         }
         catch (Exception e) {
             return new ResponseEntity<> (null, HttpStatus.EXPECTATION_FAILED);
-        }
+        }       
+    }
+
+    @GetMapping(value="/email")
+    public String sendEmail(@RequestBody Customer customer) {
         
+        if (!Objects.isNull(customer)) {
+            emailService.sendEmail(customer.getEmail(), customer.getId());
+            return "Email sent successfully.";
+        }
+        return "Customer does not exist.";
     }
     
 }
