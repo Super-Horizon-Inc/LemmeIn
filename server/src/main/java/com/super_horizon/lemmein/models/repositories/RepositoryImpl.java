@@ -1,6 +1,7 @@
 package com.super_horizon.lemmein.models.repositories;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.*;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.*;
@@ -49,6 +50,9 @@ public class RepositoryImpl<T> implements IRepository<T> {
             else {
                 
                 for (T document : documents) {
+                    Method method = document.getClass().getMethod("setIsNew", Boolean.class);
+                    method.invoke(document, false);
+                    this.mongoTemplate.save(document);
                     result.add(document);
                 }
 
