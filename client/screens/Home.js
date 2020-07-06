@@ -97,7 +97,7 @@ export default class Home extends Component {
             confirmText: "Please wait. We are sending \n" + confirmSubtext + this.state.input,
         });
 
-        fetch('https://5916aaf91162.ngrok.io/lemmein/customers', {
+        fetch('https://c13e17faa160.ngrok.io/lemmein/customers', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -107,11 +107,13 @@ export default class Home extends Component {
         })
         .then(response => 
             response.json()
+            
         )
         .then(json => {
             //const selectedIndex = this.state.selectedIndex;
             //this.props.navigation.navigate("CustomerScreen", {selectedIndex: selectedIndex});
 
+            console.log(json);
             if (json[0].isNew) {
 
                 this.setState({
@@ -125,6 +127,12 @@ export default class Home extends Component {
                         confirmText: "",
                     });
                 }, 5000);
+
+            }
+            else {
+
+                this.props.navigation.navigate("CustomerListScreen", {customerList: json, selectedIndex: this.state.selectedIndex});
+
             }
         })
         .catch(error => {

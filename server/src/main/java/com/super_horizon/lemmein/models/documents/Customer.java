@@ -16,6 +16,7 @@ public class Customer {
     private String firstName;
     private String lastName;
     private Boolean isNew;
+    private int visitCounter;
 
     public Customer() {};
 
@@ -23,13 +24,14 @@ public class Customer {
         this.phoneNumber = params.get("phoneNumber");
         this.email = params.get("email");
         this.isNew = true;
+        this.visitCounter = 0;
     }
 
     public String getId() {
         return this.id;
     }
 
-    public void setPhoneNumber(final String phoneNumber) {
+    public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
@@ -37,7 +39,7 @@ public class Customer {
         return this.phoneNumber;
     } 
 
-    public void setEmail(final String email) {
+    public void setEmail(String email) {
         this.email = email;
     }
 
@@ -45,7 +47,7 @@ public class Customer {
         return this.email;
     } 
 
-    public void setDOB(final String dob) {
+    public void setDOB(String dob) {
         this.dob = dob;
     }
 
@@ -53,7 +55,7 @@ public class Customer {
         return this.dob;
     } 
 
-    public void setFirstName(final String firstName) {
+    public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
 
@@ -61,7 +63,7 @@ public class Customer {
         return this.firstName;
     } 
     
-    public void setLastName(final String lastName) {
+    public void setLastName(String lastName) {
         this.lastName = lastName;
     }
 
@@ -75,6 +77,14 @@ public class Customer {
 
     public Boolean getIsNew() {
         return this.isNew;
+    }
+
+    public void setVisitCounter(int visitCounter) {
+        this.visitCounter = visitCounter;
+    }
+
+    public int getVisitCounter() {
+        return this.visitCounter;
     }
     
 }
