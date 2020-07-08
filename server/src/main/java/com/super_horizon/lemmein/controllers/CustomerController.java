@@ -25,10 +25,10 @@ public class CustomerController {
     private EmailService emailService;
 
     @PostMapping
-    public ResponseEntity<List<Customer>> searchOrAdd(@RequestBody Map<String, String> query) {
+    public ResponseEntity<List<Customer>> showOrAdd(@RequestBody Map<String, String> query) {
         try {
 
-            List<Customer> customers = customerService.searchOrAdd(query);
+            List<Customer> customers = customerService.showOrAdd(query);
             Customer customer = customers.get(0);
 
             if (customer.getIsNew() && customer.getEmail() != null) {
@@ -43,11 +43,11 @@ public class CustomerController {
         }
     }
 
-    @GetMapping(value="/{id}")
-    public ResponseEntity<Customer> searchById(@PathVariable String id) {
+    @GetMapping(value="/{id}/edit")
+    public ResponseEntity<Customer> edit(@PathVariable String id) {
 
         try {
-            Customer _customer = customerService.searchById(id);
+            Customer _customer = customerService.edit(id);
             return new ResponseEntity<> (_customer, HttpStatus.OK);
         }
         catch (Exception e) {
@@ -67,9 +67,9 @@ public class CustomerController {
     }
 
     @PutMapping(value="/{id}")
-    public ResponseEntity<Customer> edit(@PathVariable String id, @RequestBody Customer customer) {
+    public ResponseEntity<Customer> update(@PathVariable String id, @RequestBody Customer customer) {
         try {
-            Customer _customer = customerService.edit(id, customer);
+            Customer _customer = customerService.update(id, customer);
             return new ResponseEntity<> (_customer, HttpStatus.OK);
         }
         catch (Exception e) {

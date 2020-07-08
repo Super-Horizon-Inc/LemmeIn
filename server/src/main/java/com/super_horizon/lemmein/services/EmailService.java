@@ -13,7 +13,6 @@ public class EmailService {
 
     public void sendEmail(String email, String id) {
  
-        System.out.println(email+id);
         SimpleMailMessage msg = new SimpleMailMessage();
         msg.setTo(email);
         msg.setSubject("Lemmein");

@@ -12,7 +12,7 @@ public class CustomerService {
     @Autowired
     private CustomerRepository customerRepository;
 
-    public List<Customer> searchOrAdd(Map<String, String> query) {
+    public List<Customer> showOrAdd(Map<String, String> query) {
 
         try {
             List<Customer> customers = customerRepository.findOrCreate(query);
@@ -23,7 +23,7 @@ public class CustomerService {
         }        
     }
 
-    public Customer searchById(String id) {
+    public Customer edit(String id) {
 
         Customer _customer = customerRepository.findById(id).get();
 
@@ -34,9 +34,9 @@ public class CustomerService {
         throw new NullPointerException();       
     }
 
-    public Customer edit(String id, Customer customer) {
+    public Customer update(String id, Customer customer) {
 
-        Customer _customer = this.searchById(id);
+        Customer _customer = this.edit(id);
 
         if (!"".equals(customer.getPhoneNumber()) ) {
             _customer.setPhoneNumber(customer.getPhoneNumber());
