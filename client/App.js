@@ -3,6 +3,7 @@ import { createSwitchNavigator, createAppContainer } from 'react-navigation';
 import HomeScreen from './screens/Home.js';
 import CustomerScreen from './screens/Customer.js';
 import CustomerListScreen from './screens/CustomerList.js';
+import CustomerInformationScreen from './screens/CustomerInformation.js';
 
 const SwitchNavigator = createSwitchNavigator(
     {
@@ -14,6 +15,9 @@ const SwitchNavigator = createSwitchNavigator(
         },
         CustomerListScreen: {
             screen: CustomerListScreen
+        },
+        CustomerInformationScreen: {
+            screen: CustomerInformationScreen
         }
     },
     {

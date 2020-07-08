@@ -44,6 +44,7 @@ export default class Home extends Component {
             input: "",
             isConfirmVisible: false,
             confirmText: "",
+            
         };
 
         /**
@@ -97,7 +98,7 @@ export default class Home extends Component {
             confirmText: "Please wait. We are sending \n" + confirmSubtext + this.state.input,
         });
 
-        fetch('https://c13e17faa160.ngrok.io/lemmein/customers', {
+        fetch('https://4e11c79b26a6.ngrok.io/lemmein/customers', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -113,17 +114,16 @@ export default class Home extends Component {
             //const selectedIndex = this.state.selectedIndex;
             //this.props.navigation.navigate("CustomerScreen", {selectedIndex: selectedIndex});
 
-            console.log(json);
             if (json[0].isNew) {
 
                 this.setState({
-                    isConfirmVisible: true, 
+                    isConfirmVisible: true,                    
                     confirmText: "Email was sent successfully."
                 });
-                              
+
                 setTimeout(() => {
                     this.setState({
-                        isConfirmVisible: false, 
+                        isConfirmVisible: false,                         
                         confirmText: "",
                     });
                 }, 5000);
@@ -131,13 +131,13 @@ export default class Home extends Component {
             }
             else {
 
-                this.props.navigation.navigate("CustomerListScreen", {customerList: json, selectedIndex: this.state.selectedIndex});
+                this.props.navigation.navigate("CustomerListScreen", {customerList: json});
 
             }
         })
         .catch(error => {
             this.setState({
-                isConfirmVisible: true, 
+                isConfirmVisible: true,                
                 confirmText: "Sorry! Something went wrong."
             });
             setTimeout(() => {
