@@ -44,6 +44,7 @@ export default class Home extends Component {
             input: "",
             isConfirmVisible: false,
             confirmText: "",
+            
         };
 
         /**
@@ -97,7 +98,7 @@ export default class Home extends Component {
             confirmText: "Please wait. We are sending \n" + confirmSubtext + this.state.input,
         });
 
-        fetch('https://5916aaf91162.ngrok.io/lemmein/customers', {
+        fetch('https://4e11c79b26a6.ngrok.io/lemmein/customers', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -107,6 +108,7 @@ export default class Home extends Component {
         })
         .then(response => 
             response.json()
+            
         )
         .then(json => {
             //const selectedIndex = this.state.selectedIndex;
@@ -115,21 +117,27 @@ export default class Home extends Component {
             if (json[0].isNew) {
 
                 this.setState({
-                    isConfirmVisible: true, 
+                    isConfirmVisible: true,                    
                     confirmText: "Email was sent successfully."
                 });
-                              
+
                 setTimeout(() => {
                     this.setState({
-                        isConfirmVisible: false, 
+                        isConfirmVisible: false,                         
                         confirmText: "",
                     });
                 }, 5000);
+
+            }
+            else {
+
+                this.props.navigation.navigate("CustomerListScreen", {customerList: json});
+
             }
         })
         .catch(error => {
             this.setState({
-                isConfirmVisible: true, 
+                isConfirmVisible: true,                
                 confirmText: "Sorry! Something went wrong."
             });
             setTimeout(() => {
