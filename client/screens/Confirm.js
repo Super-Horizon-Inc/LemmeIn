@@ -50,9 +50,7 @@ export default class Confirm extends Component {
                         </View>
                     </View>
                 </Modal>
-            </View>
-            
-        )
-            
+            </View>           
+        )           
     }
 }
