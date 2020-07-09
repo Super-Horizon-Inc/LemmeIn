@@ -98,17 +98,16 @@ export default class Home extends Component {
             confirmText: "Please wait. We are sending \n" + confirmSubtext + this.state.input,
         });
 
-        fetch('https://4e11c79b26a6.ngrok.io/lemmein/customers', {
+        fetch('https://43702e122041.ngrok.io/lemmein/customers', {
             method: 'POST',
             headers: {
-                Accept: 'application/json',
+                Accept : 'application/json',
                 'Content-Type' : 'application/json'
             },
             body: isPhoneNumber ? JSON.stringify({phoneNumber:this.state.input}) : JSON.stringify({email:this.state.input})
         })
         .then(response => 
-            response.json()
-            
+            response.json()            
         )
         .then(json => {
             //const selectedIndex = this.state.selectedIndex;
@@ -126,7 +125,7 @@ export default class Home extends Component {
                         isConfirmVisible: false,                         
                         confirmText: "",
                     });
-                }, 5000);
+                }, 2000);
 
             }
             else {
@@ -168,7 +167,7 @@ export default class Home extends Component {
                                     }
                                     style={styles.container}>
                 <View style={styles.inner}>
-                    <Confirm isVisible = {this.state.isConfirmVisible} text = {this.state.confirmText} />
+                    {this.state.isConfirmVisible ? <Confirm isVisible={this.state.isConfirmVisible} text={this.state.confirmText} /> : <View></View> }
                     <Logo />
                     <View>
                         <View>

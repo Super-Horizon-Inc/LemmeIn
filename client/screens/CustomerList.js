@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import { View, SafeAreaView, ScrollView, Button } from 'react-native';
+import { View, SafeAreaView, ScrollView } from 'react-native';
+import { Button } from 'react-native-elements';
 import { DataTable } from 'react-native-paper'; 
 import CustomerInformation from './CustomerInformation.js';
+import Confirm from './Confirm.js';
 import Logo from './Logo.js';
 
 
@@ -61,11 +63,56 @@ export default class CustomerList extends Component {
         super(props);
 
         this.state = {
-            isVisible: false,
             customer: null,
+            isCustInfoVisible: false,
+            isConfirmVisible: false,           
+            confirmText: "",
         }
 
-        this.onSelect = this.onSelect.bind(this);
+    }
+
+    done = () => {
+
+        this.hideModal();
+        setTimeout(() => {
+            this.setState({isConfirmVisible: true, confirmText: "Please wait ... \nWe are sending email to:\n" + this.state.customer.email});
+        
+            fetch('https://43702e122041.ngrok.io/lemmein/customers/email', {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type' : 'application/json'
+                },
+                body: JSON.stringify({id:this.state.customer.email, email:this.state.customer.email})
+            })
+            .then(response => 
+                response.text()
+            )
+            .then(json => {
+
+                this.setState({confirmText: json});
+
+                setTimeout(() => {
+                    this.setState({isConfirmVisible: false, confirmText: ""});
+                    this.props.navigation.navigate('HomeScreen');
+                }, 2000);    
+            })
+            .catch(error => {
+                this.setState({
+                    isConfirmVisible: true,                
+                    confirmText: "Sorry! Something went wrong."
+                });
+                setTimeout(() => {
+                    this.setState({
+                        isConfirmVisible: false, 
+                        confirmText: "",
+                    });
+                }, 5000);
+                console.error(error);
+            });
+        }, 0);
+
+        
         
     }
 
@@ -73,37 +120,42 @@ export default class CustomerList extends Component {
         this.props.navigation.navigate('HomeScreen');
     }
 
-    showModal () {
-        this.setState({ isVisible: true });
+    showModal = () => {
+        this.setState({ isCustInfoVisible: true });
     }
 
-    hideModal () {
-        this.setState({ isVisible: false });
+    hideModal = () => {
+        this.setState({ isCustInfoVisible: false });
+ 
     }
 
     onSelect = (customer) => {
      
         this.setState({customer: customer});
-        this.showModal();       
+        this.showModal();
     }
 
     render() {
 
         return (
             <SafeAreaView style={{flex:1}}>
-                <Logo/>
-                <CustomerInformation isVisible={this.state.isVisible} customer={this.state.customer} />
+                <Logo />
+                <View>
+                {this.state.isConfirmVisible ? <Confirm isVisible={this.state.isConfirmVisible} text={this.state.confirmText} /> : <View></View> }               
+                {this.state.isCustInfoVisible ? <CustomerInformation isVisible={this.state.isCustInfoVisible} customer={this.state.customer} 
+                                                            hideModal={this.hideModal} done={this.done} /> : <View></View> } 
+                </View>
+                <View>
+                    <DataTable.Header style={{ width: 400 }} >
+                        <DataTable.Title>First Name</DataTable.Title>
+                        <DataTable.Title>Last Name</DataTable.Title>
+                    </DataTable.Header>
+                </View>               
                 <ScrollView directionalLockEnabled={false} horizontal={true} 
                             showsHorizontalScrollIndicator={false} bounces={false} style={{flex:1}}> 
                     <ScrollView showsVerticalScrollIndicator={false}>
                         <View>                        
-                            <DataTable>                            
-                                    <View>
-                                        <DataTable.Header style={{ width: 400 }} >
-                                            <DataTable.Title>First Name</DataTable.Title>
-                                            <DataTable.Title>Last Name</DataTable.Title>
-                                        </DataTable.Header>
-                                    </View>
+                            <DataTable>                                                               
                                     <View>
                                         <Customers customers={this.props.navigation.state.params.customerList}
                                                     onSelect={this.onSelect} />
@@ -112,8 +164,8 @@ export default class CustomerList extends Component {
                         </View>
                     </ScrollView>
                 </ScrollView>
-                <View style={{ flexDirection:"row", padding: 15}}>
-                    <Button title="None" type="solid" onPress={this.cancel} style={{width: "60%", paddingLeft: "5%", backgroundColor: "blue"}} />
+                <View>
+                    <Button title="None" type="solid" onPress={this.cancel} style={{ paddingLeft: '25%', paddingRight: '25%', paddingTop: '5%' }} />
                 </View>
             </SafeAreaView>
         )

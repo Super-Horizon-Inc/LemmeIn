@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import com.super_horizon.lemmein.models.documents.Customer;
 import com.super_horizon.lemmein.services.CustomerService;
 import com.super_horizon.lemmein.services.EmailService;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -77,12 +76,12 @@ public class CustomerController {
         }       
     }
 
-    @GetMapping(value="/email")
+    @PostMapping(value="/email")
     public String sendEmail(@RequestBody Customer customer) {
         
         if (!Objects.isNull(customer)) {
             emailService.sendEmail(customer.getEmail(), customer.getId());
-            return "Email sent successfully.";
+            return "Email was sent successfully.";
         }
         return "Customer does not exist.";
     }
