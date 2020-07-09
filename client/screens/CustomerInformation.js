@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Modal, Text, Button } from 'react-native';
+import { StyleSheet, View, Modal, Text } from 'react-native';
+import { Button } from 'react-native-elements';
+import Confirm from './Confirm.js';
 
 const styles = StyleSheet.create({
     centeredView: {
@@ -39,16 +41,11 @@ export default class CustomerInformation extends Component {
 
         super(props);
 
-    }
+        this.state = {
+            isConfirmVisible: false,           
+            confirmText: "",
+        }
 
-    submit = () => {
-        console.log(this.props);
-        this.props.navigation.navigate('HomeScreen');
-
-    }
-
-    cancel = () => {
-        this.props.isVisible = false;
     }
 
     render () {
@@ -61,8 +58,6 @@ export default class CustomerInformation extends Component {
                             <View style = {styles.modalText}>
                                 <Text style={[styles.labelText, {textAlign:'center'}]}>{'\n'}Is this your information?</Text>                               
                                 <Text style={styles.labelText}>{'\n'}First Name: </Text>
-                                { (this.props.customer != null) 
-                                ?
                                 <View>
                                     <Text>{this.props.customer.firstName}</Text>
                                     <Text style={styles.labelText}>{'\n'}Last Name: </Text>
@@ -76,15 +71,13 @@ export default class CustomerInformation extends Component {
                                     <Text style={styles.labelText}>{'\n'}Visited Times: </Text>
                                     <Text>{this.props.customer.visitCounter}</Text>
                                 </View>
-                                :
-                                <View></View>}
                             </View>
                             <View style={{ flexDirection:"row", padding: 15}}>
                                 <View style={{width: "50%"}}>
-                                    <Button title="Done" type="solid" onPress={this.submit} style={{width: "90%", paddingLeft: "5%", backgroundColor: "blue"}} />
+                                    <Button title="Done" type="solid" onPress={this.props.done} style={{width: "90%", paddingLeft: "5%"}} />
                                 </View>
                                 <View style={{width: "50%"}}>
-                                    <Button title="Cancel" type="solid" onPress={this.cancel} style={{width: "90%", paddingLeft: "5%", backgroundColor: "blue"}} />
+                                    <Button title="Cancel" type="solid" onPress={this.props.hideModal} style={{width: "90%", paddingLeft: "5%"}} />
                                 </View>
                             </View>     
                         </View>
