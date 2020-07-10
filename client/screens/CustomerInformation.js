@@ -8,7 +8,8 @@ const styles = StyleSheet.create({
       flex: 1,
       justifyContent: "center",
       alignItems: "center",
-      marginTop: 22
+      marginTop: 100,
+      marginBottom: 100,
     },
     modalView: {
       margin: 20,
@@ -48,11 +49,16 @@ export default class CustomerInformation extends Component {
 
     }
 
+    onOrientationChange = () => {
+        console.log("AAA");
+    }
+
     render () {
 
         return (
             <View style={styles.centeredView}>
-                <Modal transparent = {true} visible = { this.props.isVisible }>
+                <Modal transparent = {true} visible = { this.props.isVisible } 
+                        supportedOrientations={['portrait', 'landscape']} onOrientationChange={this.onOrientationChange}>
                     <View style={styles.centeredView}>
                         <View style={styles.modalView}>
                             <View style = {styles.modalText}>

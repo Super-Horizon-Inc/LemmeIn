@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, SafeAreaView, ScrollView } from 'react-native';
+import { View, SafeAreaView, ScrollView, Text } from 'react-native';
 import { Button } from 'react-native-elements';
 import { DataTable } from 'react-native-paper'; 
 import CustomerInformation from './CustomerInformation.js';
@@ -20,9 +20,13 @@ class Customers extends Component {
         return (
             this.props.customers.map(customer => {
                 return (
-                    <DataTable.Row onPress={() => { this.props.onSelect(customer) }} style={{ width: 400 }}>
-                        <DataTable.Cell>{customer.firstName}</DataTable.Cell>
-                        <DataTable.Cell>{customer.lastName}</DataTable.Cell>
+                    <DataTable.Row onPress={() => { this.props.onSelect(customer)}} style={{
+                        flex: 1,
+                        flexDirection: 'column',
+                        justifyContent: 'space-between',
+                      }}>
+                        <DataTable.Cell style={{width: 50, backgroundColor:'blue'}}>{customer.firstName}</DataTable.Cell>
+                        <DataTable.Cell style={{width:50,}}>{customer.lastName}</DataTable.Cell>
                     </DataTable.Row>
                 )
             })
@@ -77,13 +81,13 @@ export default class CustomerList extends Component {
         setTimeout(() => {
             this.setState({isConfirmVisible: true, confirmText: "Please wait ... \nWe are sending email to:\n" + this.state.customer.email});
         
-            fetch('https://43702e122041.ngrok.io/lemmein/customers/email', {
+            fetch('https://1630d91cb907.ngrok.io/lemmein/customers/email', {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
                     'Content-Type' : 'application/json'
                 },
-                body: JSON.stringify({id:this.state.customer.email, email:this.state.customer.email})
+                body: JSON.stringify({id:this.state.customer.id, email:this.state.customer.email})
             })
             .then(response => 
                 response.text()
@@ -140,29 +144,38 @@ export default class CustomerList extends Component {
         return (
             <SafeAreaView style={{flex:1}}>
                 <Logo />
-                <View>
-                {this.state.isConfirmVisible ? <Confirm isVisible={this.state.isConfirmVisible} text={this.state.confirmText} /> : <View></View> }               
-                {this.state.isCustInfoVisible ? <CustomerInformation isVisible={this.state.isCustInfoVisible} customer={this.state.customer} 
-                                                            hideModal={this.hideModal} done={this.done} /> : <View></View> } 
+                <View style={{alignItems: "center", paddingBottom: 10}}>
+                    {this.props.navigation.state.params.selectedIndex == 0 ? 
+                        <Text style={{fontWeight:'bold'}}>Entered Phone Number: {this.props.navigation.state.params.customerList[0].phoneNumber}</Text> :
+                        <Text style={{fontWeight:'bold'}}>Entered Email: {this.props.navigation.state.params.customerList[0].email}</Text>
+                    }
+                    <Text style={{fontWeight:'bold'}}>Who are you?</Text>
                 </View>
-                <View>
-                    <DataTable.Header style={{ width: 400 }} >
-                        <DataTable.Title>First Name</DataTable.Title>
-                        <DataTable.Title>Last Name</DataTable.Title>
-                    </DataTable.Header>
-                </View>               
+                <View style={{height:0}}>
+                    {this.state.isConfirmVisible ? <Confirm isVisible={this.state.isConfirmVisible} text={this.state.confirmText} /> : <View></View> }               
+                    {this.state.isCustInfoVisible ? <CustomerInformation isVisible={this.state.isCustInfoVisible} customer={this.state.customer} 
+                                                                hideModal={this.hideModal} done={this.done} /> : <View></View> }             
+                </View>
                 <ScrollView directionalLockEnabled={false} horizontal={true} 
                             showsHorizontalScrollIndicator={false} bounces={false} style={{flex:1}}> 
-                    <ScrollView showsVerticalScrollIndicator={false}>
-                        <View>                        
-                            <DataTable>                                                               
-                                    <View>
-                                        <Customers customers={this.props.navigation.state.params.customerList}
-                                                    onSelect={this.onSelect} />
-                                    </View>                                                                      
-                            </DataTable>
+                    <View>
+                        <View>
+                            <DataTable.Header>
+                                <DataTable.Title>First Name</DataTable.Title>
+                                <DataTable.Title>Last Name</DataTable.Title>
+                            </DataTable.Header>
                         </View>
-                    </ScrollView>
+                        <ScrollView showsVerticalScrollIndicator={false}>
+                            <View>                        
+                                <DataTable>                                                               
+                                        <View>
+                                            <Customers customers={this.props.navigation.state.params.customerList}
+                                                        onSelect={this.onSelect} />
+                                        </View>                                                                      
+                                </DataTable>
+                            </View>
+                        </ScrollView>
+                    </View>
                 </ScrollView>
                 <View>
                     <Button title="None" type="solid" onPress={this.cancel} style={{ paddingLeft: '25%', paddingRight: '25%', paddingTop: '5%' }} />

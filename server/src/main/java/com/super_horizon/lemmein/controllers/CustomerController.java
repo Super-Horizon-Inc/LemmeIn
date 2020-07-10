@@ -81,7 +81,7 @@ public class CustomerController {
         
         if (!Objects.isNull(customer)) {
             emailService.sendEmail(customer.getEmail(), customer.getId());
-            return "Email was sent successfully.";
+            return "Email was sent successfully.\n\n Welcome in!";
         }
         return "Customer does not exist.";
     }
