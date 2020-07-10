@@ -42,7 +42,7 @@ export default class Confirm extends Component {
 
         return (
             <View style={styles.centeredView}>
-                <Modal transparent = {true} visible = { this.props.isVisible }>
+                <Modal transparent = {true} visible = { this.props.isVisible } supportedOrientations={['portrait', 'landscape']}>
                     <View style={styles.centeredView}>
                         <View style={styles.modalView}>
                             <ActivityIndicator size="large" color="#0000ff" />
