@@ -98,13 +98,13 @@ export default class Home extends Component {
             confirmText: "Please wait. We are sending \n" + confirmSubtext + this.state.input,
         });
 
-        fetch('https://43702e122041.ngrok.io/lemmein/customers', {
+        fetch('https://1630d91cb907.ngrok.io/lemmein/customers', {
             method: 'POST',
             headers: {
                 Accept : 'application/json',
                 'Content-Type' : 'application/json'
             },
-            body: isPhoneNumber ? JSON.stringify({phoneNumber:this.state.input}) : JSON.stringify({email:this.state.input})
+            body: isPhoneNumber ? JSON.stringify({phoneNumber:this.state.input}) : JSON.stringify({email:this.state.input.toLowerCase()})
         })
         .then(response => 
             response.json()            
@@ -117,7 +117,7 @@ export default class Home extends Component {
 
                 this.setState({
                     isConfirmVisible: true,                    
-                    confirmText: "Email was sent successfully."
+                    confirmText: "Email was sent successfully.\n\n Welcome in!"
                 });
 
                 setTimeout(() => {
@@ -130,7 +130,7 @@ export default class Home extends Component {
             }
             else {
 
-                this.props.navigation.navigate("CustomerListScreen", {customerList: json});
+                this.props.navigation.navigate("CustomerListScreen", {customerList: json, selectedIndex: this.state.selectedIndex});
 
             }
         })
@@ -145,7 +145,6 @@ export default class Home extends Component {
                     confirmText: "",
                 });
             }, 5000);
-            console.error(error);
         });      
     };
 
@@ -167,7 +166,9 @@ export default class Home extends Component {
                                     }
                                     style={styles.container}>
                 <View style={styles.inner}>
-                    {this.state.isConfirmVisible ? <Confirm isVisible={this.state.isConfirmVisible} text={this.state.confirmText} /> : <View></View> }
+                    <View style={{ height:0 }}>
+                        <Confirm isVisible={this.state.isConfirmVisible} text={this.state.confirmText} />
+                    </View>
                     <Logo />
                     <View>
                         <View>
