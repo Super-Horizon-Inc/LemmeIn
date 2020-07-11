@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { Input, ButtonGroup, Button } from 'react-native-elements';
 import Logo from './Logo.js';
 import Confirm from './Confirm.js';
+import ValidationComponent from 'react-native-form-validator';
 
 const styles = StyleSheet.create({
     container: {
@@ -28,7 +29,7 @@ const styles = StyleSheet.create({
     }
 });
 
-export default class Home extends Component {
+export default class Home extends ValidationComponent {
 
     constructor(props) {
 
@@ -36,12 +37,14 @@ export default class Home extends Component {
 
         this.state = {
             selectedIndex: 0,
-            label: "Phone Number",
-            placeholder: "(512) 123-4567",
-            icon: "phone",
-            keyboardType: "phone-pad",
-            returnKeyType: {returnKeyType:'done'}, // setting returnKeyType property at runtime - dynamically
-            input: "",
+            // label: "Phone Number",
+            // placeholder: "(512) 123-4567",
+            // icon: "phone",
+            // keyboardType: "phone-pad",
+            // returnKeyType: {returnKeyType:'done'}, // setting returnKeyType property at runtime - dynamically
+            email: "",
+            phone: "",
+            isValidPhoneNumber: true,
             isConfirmVisible: false,
             confirmText: "",
             
@@ -63,13 +66,17 @@ export default class Home extends Component {
         if(selectedIndex == 0) {
 
             this.setState({ 
-                label: "Phone Number", 
-                placeholder: "(512) 123-4567",
-                icon: "phone",
-                keyboardType: "phone-pad",
-                returnKeyType: {returnKeyType:'done'},
-                input: "",
+                // label: "Phone Number", 
+                // placeholder: "(512) 123-4567",
+                // icon: "phone",
+                // keyboardType: "phone-pad",
+                // returnKeyType: {returnKeyType:'done'},
+                email: "",
             });
+
+            this.validate({
+                email: {required: false}
+            })
 
         }
         // user has selected `Email Address`
@@ -77,12 +84,13 @@ export default class Home extends Component {
         {
 
             this.setState({
-                label: "Email Address", 
-                placeholder: "email@address.com",
-                icon: "envelope",
-                keyboardType: "email-address",
-                returnKeyType: null,
-                input: "",
+                // label: "Email Address", 
+                // placeholder: "email@address.com",
+                // icon: "envelope",
+                // keyboardType: "email-address",
+                // returnKeyType: null,
+                isValidPhoneNumber: true,
+                phone: "",
             });
 
         }
@@ -90,63 +98,123 @@ export default class Home extends Component {
     };
 
     lemmeIn () {
-        
-        const isPhoneNumber = this.state.selectedIndex == 0 ? true : false;
-        const confirmSubtext = isPhoneNumber ? "a message to: " : "an email to: ";
-        this.setState({
-            isConfirmVisible: true, 
-            confirmText: "Please wait. We are sending \n" + confirmSubtext + this.state.input,
-        });
 
-        fetch('https://1630d91cb907.ngrok.io/lemmein/customers', {
-            method: 'POST',
-            headers: {
-                Accept : 'application/json',
-                'Content-Type' : 'application/json'
-            },
-            body: isPhoneNumber ? JSON.stringify({phoneNumber:this.state.input}) : JSON.stringify({email:this.state.input.toLowerCase()})
-        })
-        .then(response => 
-            response.json()            
-        )
-        .then(json => {
-            //const selectedIndex = this.state.selectedIndex;
-            //this.props.navigation.navigate("CustomerScreen", {selectedIndex: selectedIndex});
-
-            if (json[0].isNew) {
-
-                this.setState({
-                    isConfirmVisible: true,                    
-                    confirmText: "Email was sent successfully.\n\n Welcome in!"
-                });
-
-                setTimeout(() => {
-                    this.setState({
-                        isConfirmVisible: false,                         
-                        confirmText: "",
-                    });
-                }, 2000);
-
+        if (this.state.selectedIndex == 0) { 
+            
+            if (this.isValidPhoneNumber()) {
+                this.setState({isValidPhoneNumber: true});
             }
             else {
-
-                this.props.navigation.navigate("CustomerListScreen", {customerList: json, selectedIndex: this.state.selectedIndex});
-
+                this.setState({isValidPhoneNumber: false});
             }
-        })
-        .catch(error => {
-            this.setState({
-                isConfirmVisible: true,                
-                confirmText: "Sorry! Something went wrong."
-            });
-            setTimeout(() => {
+
+        }
+        else {
+            this.validate({
+                email: {email: true}
+            })
+        }
+        
+        setTimeout( () => {
+            if (!this.isFieldInError("email") && this.state.isValidPhoneNumber) {
+
+                const isPhoneNumber = this.state.selectedIndex == 0 ? true : false;
+                let phoneNumber = "";
+                if (isPhoneNumber) {
+                    phoneNumber = this.state.phone.split('+1 ')[0] != this.state.phone ? this.state.phone.split('+1 ')[1] : this.state.phone;
+
+                }
+                const confirmSubtext = isPhoneNumber ? "a message to: " : "an email to: ";
                 this.setState({
-                    isConfirmVisible: false, 
-                    confirmText: "",
+                    isConfirmVisible: true, 
+                    confirmText: "Please wait ... \nWe are sending \n" + confirmSubtext + this.state.email,
                 });
-            }, 5000);
-        });      
+    
+                fetch('https://b208748da9fd.ngrok.io/lemmein/customers', {
+                    method: 'POST',
+                    headers: {
+                        Accept : 'application/json',
+                        'Content-Type' : 'application/json'
+                    },
+                    body: isPhoneNumber ? JSON.stringify({phoneNumber:phoneNumber}) : JSON.stringify({email:this.state.email.toLowerCase()})
+                })
+                .then(response => 
+                    response.json()            
+                )
+                .then(json => {
+                    //const selectedIndex = this.state.selectedIndex;
+                    //this.props.navigation.navigate("CustomerScreen", {selectedIndex: selectedIndex});
+    
+                    if (json[0].isNew) {
+    
+                        this.setState({
+                            isConfirmVisible: true,                    
+                            confirmText: "Email was sent successfully.\n\n Welcome in!"
+                        });
+    
+                        setTimeout(() => {
+                            this.setState({
+                                isConfirmVisible: false,                         
+                                confirmText: "",
+                                email: "",
+                            });
+                        }, 2000);
+    
+                    }
+                    else {
+    
+                        this.props.navigation.navigate("CustomerListScreen", {customerList: json, selectedIndex: this.state.selectedIndex});
+    
+                    }
+                })
+                .catch(error => {
+                    this.setState({
+                        isConfirmVisible: true,                
+                        confirmText: "Sorry! Something went wrong."
+                    });
+                    setTimeout(() => {
+                        this.setState({
+                            isConfirmVisible: false, 
+                            confirmText: "",
+                        });
+                    }, 5000);
+                });
+    
+            }
+        }, 0);
+           
     };
+
+    onPhoneChange = (text) => {
+
+        const phoneNumber = this.formatPhoneNumber(text);
+        phoneNumber != null ? this.setState({phone: phoneNumber}) : this.setState({phone: text});
+
+    }
+
+    // formatPhoneNumber = (phoneNumberString) => {
+    //     var cleaned = ('' + phoneNumberString).replace(/\D/g, '')
+    //     var match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/)
+    //     if (match) {
+    //         return '(' + match[1] + ') ' + match[2] + '-' + match[3];
+    //     }
+    //     return null;
+    // }
+
+    formatPhoneNumber = (phoneNumberString) => {
+        var cleaned = ('' + phoneNumberString).replace(/\D/g, '')
+        var match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/)
+        if (match) {
+          var intlCode = (match[1] ? '+1 ' : '')
+          return [intlCode, '(', match[2], ') ', match[3], '-', match[4]].join('')
+        }
+        return null
+      }
+
+    isValidPhoneNumber = () => (
+        this.formatPhoneNumber(this.state.phone) != null ? true : false
+ 
+    )
 
     render () {
 
@@ -175,13 +243,35 @@ export default class Home extends Component {
                             <ButtonGroup onPress={this.updateIndex} selectedIndex={this.state.selectedIndex}
                                         buttons={["Phone Number", "Email Address"]} 
                                         containerStyle={{height: 100}} />
-                            <Input containerStyle={styles.input} label={this.state.label}
-                                    placeholder={this.state.placeholder}
-                                    leftIcon={<Icon name={this.state.icon} size={24} color='black' />}
-                                    keyboardType={this.state.keyboardType}
-                                    {...this.state.returnKeyType}
-                                    onChangeText={text => this.setState({input: text}) }
-                                    value={this.state.input} />
+                                       
+                                {/* <Input containerStyle={styles.input} label={this.state.label}
+                                        placeholder={this.state.placeholder}
+                                        leftIcon={<Icon name={this.state.icon} size={24} color='black' />}
+                                        keyboardType={this.state.keyboardType}
+                                        {...this.state.returnKeyType}
+                                        onChangeText={text => this.setState({input: text}) }
+                                        value={this.state.input} /> */}
+                            
+                            {this.state.selectedIndex == 1 
+                                ?
+                                    <Input ref="email" containerStyle={styles.input} label={"Email Address"}
+                                        placeholder={"email@address.com"} 
+                                        leftIcon={<Icon name={"envelope"} size={24} color='black' />}
+                                        keyboardType={"email-address"}
+                                        onChangeText={ text => this.setState({email: text}) } 
+                                        value={this.state.email}
+                                        errorMessage={this.isFieldInError('email') ? this.getErrorMessages() : ""} />
+
+                                :
+                                    <Input ref="phone" containerStyle={styles.input} label={"Phone Number"}
+                                        placeholder={"(512) 123-4567"} 
+                                        leftIcon={<Icon name={"phone"} size={24} color='black' />}
+                                        keyboardType={"phone-pad"} returnKeyType={'done'}
+                                        onChangeText={ (text) => {this.onPhoneChange(text)} } 
+                                        value={this.state.phone}
+                                        errorMessage={!this.state.isValidPhoneNumber ? "The field \"phone\" must be a valid phone number." : ""} />
+                            }
+                         
                         </View>
                         <View style={{alignItems: 'center'}}>
                             <Button containerStyle={styles.button} title="Lemme In" type="solid"

@@ -81,7 +81,7 @@ export default class CustomerList extends Component {
         setTimeout(() => {
             this.setState({isConfirmVisible: true, confirmText: "Please wait ... \nWe are sending email to:\n" + this.state.customer.email});
         
-            fetch('https://1630d91cb907.ngrok.io/lemmein/customers/email', {
+            fetch('https://b208748da9fd.ngrok.io/lemmein/customers/email', {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
@@ -115,9 +115,7 @@ export default class CustomerList extends Component {
                 console.error(error);
             });
         }, 0);
-
-        
-        
+     
     }
 
     cancel = () => {
