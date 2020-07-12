@@ -1,7 +1,6 @@
 package com.super_horizon.lemmein.controllers;
 
 import java.util.*;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.servlet.ModelAndView;
+
 
 @RestController
 @RequestMapping("/lemmein/customers")
@@ -43,14 +44,22 @@ public class CustomerController {
     }
 
     @GetMapping(value="/{id}/edit")
-    public ResponseEntity<Customer> edit(@PathVariable String id) {
+    public ModelAndView edit(@PathVariable String id) {
 
         try {
-            Customer _customer = customerService.edit(id);
-            return new ResponseEntity<> (_customer, HttpStatus.OK);
+            Customer _customer = customerService.findById(id);
+
+            System.out.println(_customer.getPhoneNumber());
+
+            var modelAndView = new ModelAndView();
+            modelAndView.addObject("customer", _customer);
+            modelAndView.setViewName("edit");
+
+            return modelAndView;
         }
         catch (Exception e) {
-            return new ResponseEntity<> (null, HttpStatus.EXPECTATION_FAILED);
+            //return new ResponseEntity<> (null, HttpStatus.EXPECTATION_FAILED);
+            return null;
         }
     }
 
@@ -84,6 +93,15 @@ public class CustomerController {
             return "Email was sent successfully.\n\n Welcome in!";
         }
         return "Customer does not exist.";
+    }
+
+    @GetMapping(value="/hello")
+    public ModelAndView hello() {
+        var modelAndView = new ModelAndView();
+        modelAndView.addObject("message", "AAA");
+        modelAndView.setViewName("hello");
+
+        return modelAndView;
     }
     
 }

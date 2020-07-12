@@ -23,7 +23,7 @@ public class CustomerService {
         }        
     }
 
-    public Customer edit(String id) {
+    public Customer findById(String id) {
 
         Customer _customer = customerRepository.findById(id).get();
 
@@ -36,7 +36,7 @@ public class CustomerService {
 
     public Customer update(String id, Customer customer) {
 
-        Customer _customer = this.edit(id);
+        Customer _customer = this.findById(id);
 
         if (!"".equals(customer.getPhoneNumber()) ) {
             _customer.setPhoneNumber(customer.getPhoneNumber());
