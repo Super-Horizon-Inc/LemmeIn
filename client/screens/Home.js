@@ -127,10 +127,10 @@ export default class Home extends ValidationComponent {
                 const confirmSubtext = isPhoneNumber ? "a message to: " : "an email to: ";
                 this.setState({
                     isConfirmVisible: true, 
-                    confirmText: "Please wait ... \nWe are sending \n" + confirmSubtext + this.state.email,
+                    confirmText: "Please wait ... \nWe are sending " + confirmSubtext + this.state.email,
                 });
     
-                fetch('https://b208748da9fd.ngrok.io/lemmein/customers', {
+                fetch('https://d0c2274d0418.ngrok.io/lemmein/customers', {
                     method: 'POST',
                     headers: {
                         Accept : 'application/json',

@@ -48,9 +48,6 @@ public class CustomerController {
 
         try {
             Customer _customer = customerService.findById(id);
-
-            System.out.println(_customer.getPhoneNumber());
-
             var modelAndView = new ModelAndView();
             modelAndView.addObject("customer", _customer);
             modelAndView.setViewName("edit");
@@ -74,10 +71,10 @@ public class CustomerController {
         }
     }
 
-    @PutMapping(value="/{id}")
-    public ResponseEntity<Customer> update(@PathVariable String id, @RequestBody Customer customer) {
+    @PutMapping(value="/")
+    public ResponseEntity<Customer> update( @RequestBody Customer customer) {
         try {
-            Customer _customer = customerService.update(id, customer);
+            Customer _customer = customerService.update(customer);
             return new ResponseEntity<> (_customer, HttpStatus.OK);
         }
         catch (Exception e) {
@@ -89,7 +86,13 @@ public class CustomerController {
     public String sendEmail(@RequestBody Customer customer) {
         
         if (!Objects.isNull(customer)) {
+
+            Customer _customer = customerService.findById(customer.getId());
+            _customer.setIsUpdated(false);
+            customerService.save(_customer);
+            
             emailService.sendEmail(customer.getEmail(), customer.getId());
+
             return "Email was sent successfully.\n\n Welcome in!";
         }
         return "Customer does not exist.";

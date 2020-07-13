@@ -34,22 +34,26 @@ public class CustomerService {
         throw new NullPointerException();       
     }
 
-    public Customer update(String id, Customer customer) {
+    public Customer update(Customer customer) {
 
-        Customer _customer = this.findById(id);
-
-        if (!"".equals(customer.getPhoneNumber()) ) {
-            _customer.setPhoneNumber(customer.getPhoneNumber());
-        }
-        else {
-            _customer.setEmail(customer.getEmail());
-        }
-
+        Customer _customer = this.findById(customer.getId());
+          
+        String phoneNumberForm = customer.getPhoneNumber();
+        String phoneNumber = phoneNumberForm.length() > 14 ? phoneNumberForm.split("\\+1 ")[1] : phoneNumberForm;
+        
+        _customer.setPhoneNumber(phoneNumber);   
+        _customer.setEmail(customer.getEmail());
         _customer.setDOB(customer.getDOB());
         _customer.setFirstName(customer.getFirstName());
         _customer.setLastName(customer.getLastName());
 
-        customerRepository.save(_customer);
+        if (!_customer.getIsUpdated()) {
+            _customer.setVisitCounter(_customer.getVisitCounter()+1);
+        }
+        
+        _customer.setIsUpdated(true);
+
+        this.save(_customer);
 
         return _customer;
     }
@@ -63,6 +67,10 @@ public class CustomerService {
         }
 
         throw new NullPointerException();
+    }
+
+    public void save(Customer customer) {
+        customerRepository.save(customer);
     }
 
 }

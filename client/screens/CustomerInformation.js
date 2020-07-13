@@ -74,16 +74,16 @@ export default class CustomerInformation extends Component {
                                     <Text>{this.props.customer.email}</Text>
                                     <Text style={styles.labelText}>{'\n'}Date of Birth: </Text>
                                     <Text>{this.props.customer.dob}</Text>
-                                    <Text style={styles.labelText}>{'\n'}Visited Times: </Text>
+                                    <Text style={styles.labelText}>{'\n'}Visiting Times: </Text>
                                     <Text>{this.props.customer.visitCounter}</Text>
                                 </View>
                             </View>
                             <View style={{ flexDirection:"row", padding: 15}}>
                                 <View style={{width: "50%"}}>
-                                    <Button title="Done" type="solid" onPress={this.props.done} style={{width: "90%", paddingLeft: "5%"}} />
+                                    <Button title="Yes" type="solid" onPress={this.props.done} style={{width: "90%", paddingLeft: "5%"}} />
                                 </View>
                                 <View style={{width: "50%"}}>
-                                    <Button title="Cancel" type="solid" onPress={this.props.hideModal} style={{width: "90%", paddingLeft: "5%"}} />
+                                    <Button title="No" type="solid" onPress={this.props.hideModal} style={{width: "90%", paddingLeft: "5%"}} />
                                 </View>
                             </View>     
                         </View>
