@@ -16,6 +16,7 @@ public class Customer {
     private String firstName;
     private String lastName;
     private Boolean isNew;
+    private Boolean isUpdated;
     private int visitCounter;
 
     public Customer() {};
@@ -24,6 +25,7 @@ public class Customer {
         this.phoneNumber = params.get("phoneNumber");
         this.email = params.get("email");
         this.isNew = true;
+        this.isUpdated = false;
         this.visitCounter = 0;
     }
 
@@ -47,11 +49,11 @@ public class Customer {
         return this.email;
     } 
 
-    public void setDOB(String dob) {
+    public void setDob(String dob) {
         this.dob = dob;
     }
 
-    public String getDOB() {
+    public String getDob() {
         return this.dob;
     } 
 
@@ -77,6 +79,14 @@ public class Customer {
 
     public Boolean getIsNew() {
         return this.isNew;
+    }
+
+    public void setIsUpdated(Boolean isUpdated) {
+        this.isUpdated = isUpdated;
+    }
+
+    public Boolean getIsUpdated() {
+        return this.isUpdated;
     }
 
     public void setVisitCounter(int visitCounter) {

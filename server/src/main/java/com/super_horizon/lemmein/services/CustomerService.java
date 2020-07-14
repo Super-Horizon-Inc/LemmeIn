@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import com.super_horizon.lemmein.models.repositories.CustomerRepository;
 import com.super_horizon.lemmein.models.documents.*;
 import java.util.*;
+import java.time.LocalDate;
 
 @Service
 public class CustomerService {
@@ -23,7 +24,7 @@ public class CustomerService {
         }        
     }
 
-    public Customer edit(String id) {
+    public Customer findById(String id) {
 
         Customer _customer = customerRepository.findById(id).get();
 
@@ -34,22 +35,36 @@ public class CustomerService {
         throw new NullPointerException();       
     }
 
-    public Customer update(String id, Customer customer) {
+    public Customer update(Customer customer) {
 
-        Customer _customer = this.edit(id);
+        Customer _customer = this.findById(customer.getId());
+          
+        String phoneNumberForm = customer.getPhoneNumber();
+        String phoneNumber = phoneNumberForm.length() > 14 ? phoneNumberForm.split("\\+1 ")[1] : phoneNumberForm;
 
-        if (!"".equals(customer.getPhoneNumber()) ) {
-            _customer.setPhoneNumber(customer.getPhoneNumber());
+        _customer.setPhoneNumber(phoneNumber);   
+        _customer.setEmail(customer.getEmail());
+
+        if (customer.getDob().contains("-")) {
+            LocalDate dob = LocalDate.parse(customer.getDob());
+            String dobString = dob.getMonth() + " " + dob.getDayOfMonth() + ", " + dob.getYear();
+            System.out.println("2:   " + dobString);
+            _customer.setDob(dobString);
         }
         else {
-            _customer.setEmail(customer.getEmail());
+            _customer.setDob(customer.getDob());
         }
 
-        _customer.setDOB(customer.getDOB());
         _customer.setFirstName(customer.getFirstName());
         _customer.setLastName(customer.getLastName());
 
-        customerRepository.save(_customer);
+        if (!_customer.getIsUpdated()) {
+            _customer.setVisitCounter(_customer.getVisitCounter()+1);
+        }
+        
+        _customer.setIsUpdated(true);
+
+        this.save(_customer);
 
         return _customer;
     }
@@ -63,6 +78,10 @@ public class CustomerService {
         }
 
         throw new NullPointerException();
+    }
+
+    public void save(Customer customer) {
+        customerRepository.save(customer);
     }
 
 }
