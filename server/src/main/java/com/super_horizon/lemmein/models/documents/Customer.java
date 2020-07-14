@@ -49,11 +49,11 @@ public class Customer {
         return this.email;
     } 
 
-    public void setDOB(String dob) {
+    public void setDob(String dob) {
         this.dob = dob;
     }
 
-    public String getDOB() {
+    public String getDob() {
         return this.dob;
     } 
 

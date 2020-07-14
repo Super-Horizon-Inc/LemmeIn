@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import com.super_horizon.lemmein.models.repositories.CustomerRepository;
 import com.super_horizon.lemmein.models.documents.*;
 import java.util.*;
+import java.time.LocalDate;
 
 @Service
 public class CustomerService {
@@ -40,10 +41,20 @@ public class CustomerService {
           
         String phoneNumberForm = customer.getPhoneNumber();
         String phoneNumber = phoneNumberForm.length() > 14 ? phoneNumberForm.split("\\+1 ")[1] : phoneNumberForm;
-        
+
         _customer.setPhoneNumber(phoneNumber);   
         _customer.setEmail(customer.getEmail());
-        _customer.setDOB(customer.getDOB());
+
+        if (customer.getDob().contains("-")) {
+            LocalDate dob = LocalDate.parse(customer.getDob());
+            String dobString = dob.getMonth() + " " + dob.getDayOfMonth() + ", " + dob.getYear();
+            System.out.println("2:   " + dobString);
+            _customer.setDob(dobString);
+        }
+        else {
+            _customer.setDob(customer.getDob());
+        }
+
         _customer.setFirstName(customer.getFirstName());
         _customer.setLastName(customer.getLastName());
 

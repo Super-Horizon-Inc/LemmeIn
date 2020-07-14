@@ -16,7 +16,7 @@ public class EmailService {
         SimpleMailMessage msg = new SimpleMailMessage();
         msg.setTo(email);
         msg.setSubject("Lemmein");
-        msg.setText("Please click on the link nelow \n" + "http://localhost:8080/lemmein/customers/" + id + "/edit");
+        msg.setText("Please click on the link below to confirm\n" + "http://localhost:8080/lemmein/customers/" + id + "/edit");
         javaMailSender.send(msg);
     }
 

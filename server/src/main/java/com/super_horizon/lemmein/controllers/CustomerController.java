@@ -98,13 +98,4 @@ public class CustomerController {
         return "Customer does not exist.";
     }
 
-    @GetMapping(value="/hello")
-    public ModelAndView hello() {
-        var modelAndView = new ModelAndView();
-        modelAndView.addObject("message", "AAA");
-        modelAndView.setViewName("hello");
-
-        return modelAndView;
-    }
-    
 }

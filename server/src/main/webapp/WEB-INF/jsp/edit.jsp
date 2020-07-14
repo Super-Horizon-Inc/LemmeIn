@@ -162,11 +162,12 @@
                                 url : 'http://localhost:8080/lemmein/customers/',
                                 contentType: 'application/json',
                                 data : JSON.stringify({
-                                    id: "${customer.id}",
                                     
+                                    id: "${customer.id}",
+
                                     firstName: document.getElementsByName("firstName")[0].value != "" ? document.getElementsByName("firstName")[0].value : "${customer.firstName}",
                                     lastName: document.getElementsByName("lastName")[0].value != "" ? document.getElementsByName("lastName")[0].value : "${customer.lastName}",
-                                    //dob: document.getElementsByName("dob")[0].value != "" ? document.getElementsByName("dob")[0].value : "${customer.dob}",
+                                    dob: document.getElementsByName("dob")[0].value != "" ? document.getElementsByName("dob")[0].value : "${customer.dob}",
                                     phoneNumber: document.getElementsByName("phoneNumber")[0].value != "" ? document.getElementsByName("phoneNumber")[0].value : "${customer.phoneNumber}",
                                     email: document.getElementsByName("email")[0].value != "" ? document.getElementsByName("email")[0].value : "${customer.email}",
 
@@ -177,7 +178,7 @@
                                     const nameDisplay = "Thank you for visiting us, " + data.firstName + "!";
                                     document.querySelector("#nameDisplay").textContent = nameDisplay;
 
-                                    const visitDisplay = "Your visiting times is: " + data.visitCounter + ".";
+                                    const visitDisplay = "Your visiting times: " + data.visitCounter + ".";
                                     document.querySelector("#visitDisplay").textContent = visitDisplay;
 
                                     $.each(document.getElementsByClassName("inputDisable"), function(index, value) {
