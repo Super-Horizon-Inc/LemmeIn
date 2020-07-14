@@ -1,87 +1,84 @@
 import React, { Component } from 'react';
-import { View, SafeAreaView, ScrollView, Text } from 'react-native';
+import { View, SafeAreaView, ScrollView, Text, Dimensions, StyleSheet } from 'react-native';
 import { Button } from 'react-native-elements';
 import { DataTable } from 'react-native-paper'; 
 import CustomerInformation from './CustomerInformation.js';
 import Confirm from './Confirm.js';
 import Logo from './Logo.js';
 
-
 class Customers extends Component {
   
     constructor(props) {
-
+        
         super(props);
 
     }
 
-    render () {
-        
+    render () {       
         return (
             this.props.customers.map(customer => {
                 return (
-                    <DataTable.Row onPress={() => { this.props.onSelect(customer)}} style={{
-                        flex: 1,
-                        flexDirection: 'column',
-                        justifyContent: 'space-between',
-                      }}>
-                        <DataTable.Cell style={{width: 50, backgroundColor:'blue'}}>{customer.firstName}</DataTable.Cell>
-                        <DataTable.Cell style={{width:50,}}>{customer.lastName}</DataTable.Cell>
+                    <DataTable.Row onPress={() => { this.props.onSelect(customer)}}>
+                        <DataTable.Cell>{customer.firstName}</DataTable.Cell>
+                        <DataTable.Cell>{customer.lastName}</DataTable.Cell>
                     </DataTable.Row>
                 )
             })
         ) 
-    }         
-         
+    }                  
 }
 
-// function ShowPagination(props) {
-    
-//     const rowsPerPage = 5;
-//     // const rows = [ { key: 1, name: 'Page 1' },
-//     //                 { key: 2, name: 'Page 2' },
-//     //                 { key: 3, name: 'Page 3' } ];
-    
-//     const [page, setPage] = React.useState(0);
+const portraitStyles = StyleSheet.create({
+    pagination: {
+        marginRight: 0
+    }
+})
 
-//     const endOfPage = ((page + 1) * rowsPerPage);
-//     const numberOfCustomer = props.customers.length;
-//     const from = page * rowsPerPage;
-//     const to = endOfPage <= numberOfCustomer ? endOfPage : numberOfCustomer;
-  
-//     return (
-//         <DataTable.Pagination
-//           page={page}
-//           numberOfPages={Math.ceil(numberOfCustomer / rowsPerPage)}
-//           onPageChange={page => setPage(page)}
-//           label={`${from + 1}-${to} of ${numberOfCustomer}`}
-          
-//         />
-//     );
-// };
+const landscapeStyles = StyleSheet.create({
+    pagination: {
+        marginRight: 100
+    }
+})
 
 export default class CustomerList extends Component {
 
     constructor (props) {
 
-        super(props);
+        super(props);        
+
+        const customerList = this.props.navigation.state.params.customerList;
 
         this.state = {
             customer: null,
             isCustInfoVisible: false,
             isConfirmVisible: false,           
             confirmText: "",
+            orientation: this.isPortrait() ? "portrait" : "landscape",
+            customersOriginal: customerList,
+            customers: customerList.slice(0,customerList.length <= 5 ? customerList.length : 5),
+            pageNumber: 0,
+            pageFrom: 1,
+            pageTo: customerList.length > 5 ? 5 : customerList.length,
+           
         }
+
+        Dimensions.addEventListener("change", () => {
+            this.setState({
+                orientation: this.isPortrait() ? "portrait" : "landscape"
+            });
+        });
 
     }
 
     done = () => {
 
         this.hideModal();
+
         setTimeout(() => {
+
             this.setState({isConfirmVisible: true, confirmText: "Please wait ... \nWe are sending email to:\n" + this.state.customer.email});
         
-            fetch('https://b208748da9fd.ngrok.io/lemmein/customers/email', {
+            fetch('https://d7ec0e5e121e.ngrok.io/lemmein/customers/email', {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
@@ -118,8 +115,13 @@ export default class CustomerList extends Component {
      
     }
 
+    isPortrait = () => {
+        const dim = Dimensions.get("screen");
+        return dim.height >= dim.width;
+    };
+
     cancel = () => {
-        this.props.navigation.navigate('HomeScreen');
+        this.props.navigation.navigate("HomeScreen");
     }
 
     showModal = () => {
@@ -137,44 +139,62 @@ export default class CustomerList extends Component {
         this.showModal();
     }
 
+    onPageChange = (pageNumber) => {
+
+        const pageFrom = pageNumber*5 + 1;
+
+        const sliceFrom = pageFrom == 1 ? 0 : pageFrom - 1;
+        
+        this.setState({
+            pageFrom: pageFrom,
+            pageNumber: pageNumber,
+            customers: this.state.customersOriginal.slice(sliceFrom, this.state.customersOriginal.length <= sliceFrom + 5 ? this.state.customersOriginal.length : sliceFrom + 5)
+        });
+
+        const to = (this.state.customersOriginal.length - (pageNumber * 5)) > 5 ? (pageNumber+1) * 5 : this.state.customersOriginal.length;
+        this.setState({                 
+            pageTo: to,
+        });
+
+    }
+
     render() {
 
         return (
-            <SafeAreaView style={{flex:1}}>
-                <Logo />
-                <View style={{alignItems: "center", paddingBottom: 10}}>
+            <SafeAreaView style={{flex:1,marginTop: 50}}>
+                <Logo/>
+
+                <View style={{alignItems: 'center', paddingBottom: 10}}>
                     {this.props.navigation.state.params.selectedIndex == 0 ? 
-                        <Text style={{fontWeight:'bold'}}>Entered Phone Number: {this.props.navigation.state.params.customerList[0].phoneNumber}</Text> :
-                        <Text style={{fontWeight:'bold'}}>Entered Email: {this.props.navigation.state.params.customerList[0].email}</Text>
+                        <Text style={{fontWeight:'bold'}}>Entered Phone Number: {this.state.customers[0].phoneNumber}</Text> :
+                        <Text style={{fontWeight:'bold'}}>Entered Email: {this.state.customers[0].email}</Text>
                     }
                     <Text style={{fontWeight:'bold'}}>Who are you?</Text>
                 </View>
+
                 <View style={{height:0}}>
                     {this.state.isConfirmVisible ? <Confirm isVisible={this.state.isConfirmVisible} text={this.state.confirmText} /> : <View></View> }               
                     {this.state.isCustInfoVisible ? <CustomerInformation isVisible={this.state.isCustInfoVisible} customer={this.state.customer} 
                                                                 hideModal={this.hideModal} done={this.done} /> : <View></View> }             
                 </View>
-                <ScrollView directionalLockEnabled={false} horizontal={true} 
-                            showsHorizontalScrollIndicator={false} bounces={false} style={{flex:1}}> 
-                    <View>
-                        <View>
-                            <DataTable.Header>
-                                <DataTable.Title>First Name</DataTable.Title>
-                                <DataTable.Title>Last Name</DataTable.Title>
-                            </DataTable.Header>
-                        </View>
+                
+                    <DataTable style={{width: Dimensions.get("screen").width}}>
+                        <DataTable.Pagination style={this.state.orientation == 'portrait' ? portraitStyles.pagination : landscapeStyles.pagination}
+                            page={this.state.pageNumber}
+                            numberOfPages={Math.ceil(this.state.customersOriginal.length / 5)}
+                            onPageChange={page => this.onPageChange(page)}
+                            label={`${this.state.pageFrom}-${this.state.pageTo} of ${this.state.customersOriginal.length}`}
+                        />
+                        <DataTable.Header>
+                            <DataTable.Title>First Name</DataTable.Title>
+                            <DataTable.Title>Last Name</DataTable.Title>
+                        </DataTable.Header>
+
                         <ScrollView showsVerticalScrollIndicator={false}>
-                            <View>                        
-                                <DataTable>                                                               
-                                        <View>
-                                            <Customers customers={this.props.navigation.state.params.customerList}
-                                                        onSelect={this.onSelect} />
-                                        </View>                                                                      
-                                </DataTable>
-                            </View>
+                            <Customers customers={this.state.customers} onSelect={this.onSelect} />
                         </ScrollView>
-                    </View>
-                </ScrollView>
+                    </DataTable>
+
                 <View>
                     <Button title="None" type="solid" onPress={this.cancel} style={{ paddingLeft: '25%', paddingRight: '25%', paddingTop: '5%' }} />
                 </View>

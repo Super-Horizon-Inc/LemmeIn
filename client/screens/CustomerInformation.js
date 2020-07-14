@@ -1,23 +1,20 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Modal, Text } from 'react-native';
+import { StyleSheet, View, Modal, Text, Dimensions } from 'react-native';
 import { Button } from 'react-native-elements';
-import Confirm from './Confirm.js';
 
-const styles = StyleSheet.create({
+
+const portraitStyles = StyleSheet.create({
     centeredView: {
       flex: 1,
-      justifyContent: "center",
-      alignItems: "center",
-      marginTop: 100,
-      marginBottom: 100,
+      justifyContent: 'center',
+      alignItems: 'center'
     },
     modalView: {
-      margin: 20,
-      backgroundColor: "white",
+      backgroundColor: 'white', 
       borderRadius: 20,
-      padding: 35,
-      //alignItems: "center",
-      shadowColor: "#000",
+      marginHorizontal: 10,
+      padding: 40,
+      shadowColor: '#000',
       shadowOffset: {
         width: 0,
         height: 2
@@ -28,9 +25,41 @@ const styles = StyleSheet.create({
     },
     modalText: {
       marginBottom: 15,
-      textAlign: "center"
+      textAlign: 'center'
     },
     labelText: {
+      marginTop: 15,
+      fontWeight:'bold',
+    }
+  });
+
+const landscapeStyles = StyleSheet.create({
+    centeredView: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    modalView: {
+      backgroundColor: 'white', 
+      borderRadius: 20,
+      paddingVertical: 8,
+      paddingHorizontal: 40,
+      marginHorizontal: 120,
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 2
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 3.84,
+      elevation: 5
+    },
+    modalText: {
+      marginBottom: 8,
+      textAlign: 'center'
+    },
+    labelText: {
+      marginTop: 8,
       fontWeight:'bold',
     }
   });
@@ -45,45 +74,55 @@ export default class CustomerInformation extends Component {
         this.state = {
             isConfirmVisible: false,           
             confirmText: "",
+            orientation: this.isPortrait() ? "portrait" : "landscape", 
         }
 
     }
 
+    isPortrait = () => {
+        const dim = Dimensions.get('screen');
+        return dim.height >= dim.width;
+    };
+
+    getStyle = () => (
+        this.state.orientation == "portrait" ? portraitStyles : landscapeStyles 
+    )
+
     onOrientationChange = () => {
-        console.log("AAA");
+        this.setState({orientation: this.isPortrait() ? "portrait" : "landscape"});
     }
 
     render () {
 
         return (
-            <View style={styles.centeredView}>
+            <View style={this.getStyle().centeredView}>
                 <Modal transparent = {true} visible = { this.props.isVisible } 
-                        supportedOrientations={['portrait', 'landscape']} onOrientationChange={this.onOrientationChange}>
-                    <View style={styles.centeredView}>
-                        <View style={styles.modalView}>
-                            <View style = {styles.modalText}>
-                                <Text style={[styles.labelText, {textAlign:'center'}]}>{'\n'}Is this your information?</Text>                               
-                                <Text style={styles.labelText}>{'\n'}First Name: </Text>
-                                <View>
+                        supportedOrientations={["portrait", "landscape"]} onOrientationChange={this.onOrientationChange}>
+                    <View style={this.getStyle().centeredView}>
+                        <View style={this.getStyle().modalView}>
+                            <View style = {this.getStyle().modalText}>
+                                <Text style={[this.getStyle().labelText, {textAlign:'center'}]}>Is this your information?</Text>                               
+                                <View>    
+                                    <Text style={this.getStyle().labelText}>First Name: </Text>               
                                     <Text>{this.props.customer.firstName}</Text>
-                                    <Text style={styles.labelText}>{'\n'}Last Name: </Text>
+                                    <Text style={this.getStyle().labelText}>Last Name: </Text>
                                     <Text>{this.props.customer.lastName}</Text>
-                                    <Text style={styles.labelText}>{'\n'}Phone Number: </Text>
-                                    <Text>{this.props.customer.phone}</Text>
-                                    <Text style={styles.labelText}>{'\n'}Email: </Text>
+                                    <Text style={this.getStyle().labelText}>Phone Number: </Text>
+                                    <Text>{this.props.customer.phoneNumber}</Text>
+                                    <Text style={this.getStyle().labelText}>Email: </Text>
                                     <Text>{this.props.customer.email}</Text>
-                                    <Text style={styles.labelText}>{'\n'}Date of Birth: </Text>
+                                    <Text style={this.getStyle().labelText}>Date of Birth: </Text>
                                     <Text>{this.props.customer.dob}</Text>
-                                    <Text style={styles.labelText}>{'\n'}Visited Times: </Text>
+                                    <Text style={this.getStyle().labelText}>Visiting Times: </Text>
                                     <Text>{this.props.customer.visitCounter}</Text>
                                 </View>
                             </View>
-                            <View style={{ flexDirection:"row", padding: 15}}>
-                                <View style={{width: "50%"}}>
-                                    <Button title="Done" type="solid" onPress={this.props.done} style={{width: "90%", paddingLeft: "5%"}} />
+                            <View style={{flexDirection:'row'}}>
+                                <View style={{width: '50%'}}>
+                                    <Button title="Yes" type="solid" onPress={this.props.done} style={{width: '90%', padding: '5%'}} />
                                 </View>
                                 <View style={{width: "50%"}}>
-                                    <Button title="Cancel" type="solid" onPress={this.props.hideModal} style={{width: "90%", paddingLeft: "5%"}} />
+                                    <Button title="No" type="solid" onPress={this.props.hideModal} style={{width: '90%', padding: '5%'}} />
                                 </View>
                             </View>     
                         </View>

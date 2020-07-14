@@ -127,10 +127,10 @@ export default class Home extends ValidationComponent {
                 const confirmSubtext = isPhoneNumber ? "a message to: " : "an email to: ";
                 this.setState({
                     isConfirmVisible: true, 
-                    confirmText: "Please wait ... \nWe are sending \n" + confirmSubtext + this.state.email,
+                    confirmText: "Please wait ... \nWe are sending " + confirmSubtext + this.state.email,
                 });
     
-                fetch('https://b208748da9fd.ngrok.io/lemmein/customers', {
+                fetch('https://d7ec0e5e121e.ngrok.io/lemmein/customers', {
                     method: 'POST',
                     headers: {
                         Accept : 'application/json',
@@ -205,15 +205,14 @@ export default class Home extends ValidationComponent {
         var cleaned = ('' + phoneNumberString).replace(/\D/g, '')
         var match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/)
         if (match) {
-          var intlCode = (match[1] ? '+1 ' : '')
-          return [intlCode, '(', match[2], ') ', match[3], '-', match[4]].join('')
+            var intlCode = (match[1] ? '+1 ' : '')
+            return [intlCode, '(', match[2], ') ', match[3], '-', match[4]].join('')
         }
         return null
-      }
+    }
 
     isValidPhoneNumber = () => (
         this.formatPhoneNumber(this.state.phone) != null ? true : false
- 
     )
 
     render () {
@@ -241,8 +240,7 @@ export default class Home extends ValidationComponent {
                     <View>
                         <View>
                             <ButtonGroup onPress={this.updateIndex} selectedIndex={this.state.selectedIndex}
-                                        buttons={["Phone Number", "Email Address"]} 
-                                        containerStyle={{height: 100}} />
+                                        buttons={["Phone Number", "Email Address"]} containerStyle={{height: 100}} />
                                        
                                 {/* <Input containerStyle={styles.input} label={this.state.label}
                                         placeholder={this.state.placeholder}
@@ -261,26 +259,22 @@ export default class Home extends ValidationComponent {
                                         onChangeText={ text => this.setState({email: text}) } 
                                         value={this.state.email}
                                         errorMessage={this.isFieldInError('email') ? this.getErrorMessages() : ""} />
-
                                 :
                                     <Input ref="phone" containerStyle={styles.input} label={"Phone Number"}
                                         placeholder={"(512) 123-4567"} 
                                         leftIcon={<Icon name={"phone"} size={24} color='black' />}
-                                        keyboardType={"phone-pad"} returnKeyType={'done'}
+                                        keyboardType={"phone-pad"} returnKeyType={"done"}
                                         onChangeText={ (text) => {this.onPhoneChange(text)} } 
                                         value={this.state.phone}
                                         errorMessage={!this.state.isValidPhoneNumber ? "The field \"phone\" must be a valid phone number." : ""} />
-                            }
-                         
+                            }                         
                         </View>
                         <View style={{alignItems: 'center'}}>
-                            <Button containerStyle={styles.button} title="Lemme In" type="solid"
-                                    onPress={this.lemmeIn} />
+                            <Button containerStyle={styles.button} title="Lemme In" type="solid" onPress={this.lemmeIn} />
                         </View>
                     </View>
                 </View>
             </KeyboardAvoidingView>
         );
-    }
-        
+    }      
 }
