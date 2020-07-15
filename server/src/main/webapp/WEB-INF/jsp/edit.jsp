@@ -21,10 +21,26 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
     
-    
+    <style>
+        html {
+            height: 100%;
+        }
+        body {
+            height: 100%; 
+            margin: 0; 
+            background-repeat: no-repeat; 
+            background-attachment: fixed;
+            background-image: linear-gradient(rgba(4, 48, 48, 255), rgba(111, 109, 109, 255), transparent, rgba(4, 48, 48, 255))
+        }
+        img {
+            height: 200px;
+            margin-top: 5%;
+            margin-bottom: 5%;
+        }
+    </style>
 
 </head>
-<body style="background-image: linear-gradient(rgba(138, 186, 211, 255), rgba(252, 246, 245, 255), rgba(252, 246, 245, 255), rgba(252, 246, 245, 255), rgba(138, 186, 211, 255))">
+<body>
 
     <header>  
         <div class="text-center"><img src="/images/app-logo.png" alt="Lemme In logo"></div>       
@@ -71,10 +87,10 @@
                         </c:choose>
                                               
                         <div class="form-group">
-                            <small id="help" class="form-text text-muted"> We'll never share your information with anyone else.</small>
+                            <small id="help" class="form-text text-muted" style="color: white !important;"> We'll never share your information with anyone else.</small>
                         </div>
                         <div class="form-group">
-                            <button class="btn btn-primary btn-lg btn-block inputDisable">Submit</button>
+                            <button class="btn btn-primary btn-lg btn-block inputDisable" style="background-color: #376363FF; border-color: #376363FF;">Submit</button>
                         </div>
                     </form>
 
@@ -83,18 +99,18 @@
                         <div class="modal-dialog modal-dialog-centered" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLongTitle">Nice to see you!</h5>
+                                    <h5 class="modal-title" id="exampleModalLongTitle" style="color: #376363FF">Nice to see you!</h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <p id="nameDisplay"></p>
-                                    <p id="visitDisplay"></p>
-                                    <p>We hope to see you again soon. Bye!</p>
+                                    <p id="nameDisplay" style="color: #376363FF"></p>
+                                    <p id="visitDisplay" style="color: #376363FF"></p>
+                                    <p style="color: #376363FF">We hope to see you again soon. Bye!</p>
                                 </div>
                                 <div class="modal-footer justify-content-center">
-                                    <button class="btn btn-primary" data-dismiss="modal">OK</button>
+                                    <button class="btn btn-primary" data-dismiss="modal" style="background-color: #376363FF; border-color: #376363FF;">OK</button>
                                 </div>
                             </div>
                         </div>

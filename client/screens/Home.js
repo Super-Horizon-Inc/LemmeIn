@@ -23,8 +23,9 @@ const styles = StyleSheet.create({
         top: '130%',
         color: 'white'
     },
-    button: {
-        top: 150,
+    buttonContainer:{
+        marginTop: '50%',
+        //color: 'white',
         width: '85%',
         position: 'absolute',
     }
@@ -193,9 +194,8 @@ export default class Home extends ValidationComponent {
     )
 
     render () {
-
         return (
-            <LinearGradient colors={['#8ABAD3FF', '#FCF6F5FF', '#FCF6F5FF', '#FCF6F5FF', '#8ABAD3FF']} style={{position: 'absolute', left: 0, right: 0, top: 0, height: '100%'}} >
+            <LinearGradient colors={['#043030FF', '#6f6d6dFF', 'transparent', '#043030FF']} style={{position: 'absolute', left: 0, right: 0, top: 0, height: '100%'}} >
                 <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"}
                                         keyboardVerticalOffset={
                                             Platform.select({
@@ -218,12 +218,12 @@ export default class Home extends ValidationComponent {
                             <Logo />
                             <View>
                                 <View>
-                                    <ButtonGroup onPress={this.updateIndex} selectedIndex={this.state.selectedIndex}
-                                                buttons={["Phone Number", "Email Address"]} containerStyle={{height: 100, borderColor: '#FCF6F5FF'}} />
+                                    <ButtonGroup onPress={this.updateIndex} selectedIndex={this.state.selectedIndex} selectedButtonStyle={{backgroundColor:'#376363FF', color: 'white'}}
+                                                buttons={["Phone Number", "Email Address"]} containerStyle={{height: 100, borderColor: '#6f6d6dFF'}} />
                                     
                                     {this.state.selectedIndex == 1 
                                         ?
-                                            <Input ref="email" containerStyle={styles.input} label={"Email Address"}
+                                            <Input ref="email" containerStyle={styles.input} labelStyle={{color: 'black'}} label={"Email Address"}
                                                 placeholder={"email@address.com"} 
                                                 leftIcon={<Icon name={"envelope"} size={24} color='black' />}
                                                 keyboardType={"email-address"}
@@ -231,7 +231,7 @@ export default class Home extends ValidationComponent {
                                                 value={this.state.email}
                                                 errorMessage={this.isFieldInError('email') ? this.getErrorMessages() : ""} />
                                         :
-                                            <Input ref="phone" containerStyle={styles.input} label={"Phone Number"}
+                                            <Input ref="phone" containerStyle={styles.input} labelStyle={{color: 'black'}} label={"Phone Number"}
                                                 placeholder={"(512) 123-4567"} 
                                                 leftIcon={<Icon name={"phone"} size={24} color='black' />}
                                                 keyboardType={"phone-pad"} returnKeyType={"done"}
@@ -240,8 +240,9 @@ export default class Home extends ValidationComponent {
                                                 errorMessage={!this.state.isValidPhoneNumber ? "The field \"phone\" must be a valid phone number." : ""} />
                                     }                         
                                 </View>
-                                <View style={{alignItems: 'center'}}>
-                                    <Button containerStyle={styles.button} title="Lemme In" type="solid" onPress={this.lemmeIn} />
+                                <View style={{alignItems:'center'}}>
+                                    <Button 
+                                     containerStyle={styles.buttonContainer} buttonStyle={{backgroundColor:'#376363FF'}} title="Lemme In" onPress={this.lemmeIn} />
                                 </View>
                             </View>
                         </View>

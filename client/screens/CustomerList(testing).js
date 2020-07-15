@@ -40,29 +40,6 @@ const landscapeStyles = StyleSheet.create({
     }
 })
 
-function ShowPagination(props) {
-    
-    //const rowsPerPage = 5;
-    
-    const [page, setPage] = React.useState(0);
-
-    //const endOfPage = ((page + 1) * rowsPerPage);
-    //const numberOfCustomer = props.customers.length;
-    //const from = page * rowsPerPage;
-    //const to = endOfPage <= numberOfCustomer ? endOfPage : numberOfCustomer;
-
-    console.log(page);
-  
-    return (
-        <DataTable.Pagination
-          page={page}
-          numberOfPages={Math.ceil(numberOfCustomer / rowsPerPage)}
-          onPageChange={page => setPage(page)}
-          label={`${from + 1}-${to} of ${numberOfCustomer}`}         
-        />
-    );
-};
-
 export default class CustomerList extends Component {
 
     constructor (props) {
@@ -70,7 +47,7 @@ export default class CustomerList extends Component {
         super(props);      
         
         const customers = this.props.navigation.state.params.customerList;
-        const rowsPerPage = 5;
+        //const rowsPerPage = 5;
 
         this.state = {
             customer: null,
@@ -79,9 +56,7 @@ export default class CustomerList extends Component {
             confirmText: "",
             orientation: this.isPortrait() ? "portrait" : "landscape",
             page: 0,
-            from: page * rowsPerPage,
-            to: ((page + 1) * rowsPerPage) <= numberOfCustomer ? ((page + 1) * rowsPerPage) : customers.length,
-            customerSlice = customers.slice(this.state.from, this.state.to),
+                       
         }
 
         Dimensions.addEventListener("change", () => {
@@ -162,7 +137,9 @@ export default class CustomerList extends Component {
     }
 
     onPageChange = (pageNumber) => {
-
+        let from = this.state.page * 5;
+        let to = ((this.state.page + 1) * 5) <= this.props.navigation.state.params.customerList.length ? ((this.state.page + 1) * 5) : this.props.navigation.state.params.customerList.length;
+        let customerSlice = this.props.navigation.state.params.customerList.slice(this.state.from, this.state.to);
     }
 
     render() {
@@ -186,7 +163,13 @@ export default class CustomerList extends Component {
                 </View>
                 
                     <DataTable style={{width: Dimensions.get("screen").width}}>
-                        <ShowPagination customers={this.props.navigation.state.params.customerList} />
+                     
+                        <DataTable.Pagination
+                            page={this.state.page}
+                            numberOfPages={Math.ceil(this.props.navigation.state.params.customerList.length / 5)}
+                            onPageChange={page => {this.onPageChange(page)}}
+                            label={`${from + 1}-${to} of ${numberOfCustomer}`}         
+                        />
                         <DataTable.Header>
                             <DataTable.Title>First Name</DataTable.Title>
                             <DataTable.Title>Last Name</DataTable.Title>

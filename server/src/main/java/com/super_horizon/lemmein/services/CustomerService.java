@@ -48,7 +48,6 @@ public class CustomerService {
         if (customer.getDob().contains("-")) {
             LocalDate dob = LocalDate.parse(customer.getDob());
             String dobString = dob.getMonth() + " " + dob.getDayOfMonth() + ", " + dob.getYear();
-            System.out.println("2:   " + dobString);
             _customer.setDob(dobString);
         }
         else {
