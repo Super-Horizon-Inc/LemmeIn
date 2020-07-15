@@ -40,13 +40,37 @@ const landscapeStyles = StyleSheet.create({
     }
 })
 
+function ShowPagination(props) {
+    
+    //const rowsPerPage = 5;
+    
+    const [page, setPage] = React.useState(0);
+
+    //const endOfPage = ((page + 1) * rowsPerPage);
+    //const numberOfCustomer = props.customers.length;
+    //const from = page * rowsPerPage;
+    //const to = endOfPage <= numberOfCustomer ? endOfPage : numberOfCustomer;
+
+    console.log(page);
+  
+    return (
+        <DataTable.Pagination
+          page={page}
+          numberOfPages={Math.ceil(numberOfCustomer / rowsPerPage)}
+          onPageChange={page => setPage(page)}
+          label={`${from + 1}-${to} of ${numberOfCustomer}`}         
+        />
+    );
+};
+
 export default class CustomerList extends Component {
 
     constructor (props) {
 
-        super(props);        
-
-        const customerList = this.props.navigation.state.params.customerList;
+        super(props);      
+        
+        const customers = this.props.navigation.state.params.customerList;
+        const rowsPerPage = 5;
 
         this.state = {
             customer: null,
@@ -54,12 +78,10 @@ export default class CustomerList extends Component {
             isConfirmVisible: false,           
             confirmText: "",
             orientation: this.isPortrait() ? "portrait" : "landscape",
-            customersOriginal: customerList,
-            customers: customerList.slice(0,customerList.length <= 5 ? customerList.length : 5),
-            pageNumber: 0,
-            pageFrom: 1,
-            pageTo: customerList.length > 5 ? 5 : customerList.length,
-           
+            page: 0,
+            from: page * rowsPerPage,
+            to: ((page + 1) * rowsPerPage) <= numberOfCustomer ? ((page + 1) * rowsPerPage) : customers.length,
+            customerSlice = customers.slice(this.state.from, this.state.to),
         }
 
         Dimensions.addEventListener("change", () => {
@@ -141,21 +163,6 @@ export default class CustomerList extends Component {
 
     onPageChange = (pageNumber) => {
 
-        const pageFrom = pageNumber*5 + 1;
-
-        const sliceFrom = pageFrom == 1 ? 0 : pageFrom - 1;
-        
-        this.setState({
-            pageFrom: pageFrom,
-            pageNumber: pageNumber,
-            customers: this.state.customersOriginal.slice(sliceFrom, this.state.customersOriginal.length <= sliceFrom + 5 ? this.state.customersOriginal.length : sliceFrom + 5)
-        });
-
-        const to = (this.state.customersOriginal.length - (pageNumber * 5)) > 5 ? (pageNumber+1) * 5 : this.state.customersOriginal.length;
-        this.setState({                 
-            pageTo: to,
-        });
-
     }
 
     render() {
@@ -166,8 +173,8 @@ export default class CustomerList extends Component {
 
                 <View style={{alignItems: 'center', paddingBottom: 10}}>
                     {this.props.navigation.state.params.selectedIndex == 0 ? 
-                        <Text style={{fontWeight:'bold'}}>Entered Phone Number: {this.state.customers[0].phoneNumber}</Text> :
-                        <Text style={{fontWeight:'bold'}}>Entered Email: {this.state.customers[0].email}</Text>
+                        <Text style={{fontWeight:'bold'}}>Entered Phone Number: {this.props.navigation.state.params.customerList[0].phoneNumber}</Text> :
+                        <Text style={{fontWeight:'bold'}}>Entered Email: {this.props.navigation.state.params.customerList[0].email}</Text>
                     }
                     <Text style={{fontWeight:'bold'}}>Who are you?</Text>
                 </View>
@@ -179,19 +186,14 @@ export default class CustomerList extends Component {
                 </View>
                 
                     <DataTable style={{width: Dimensions.get("screen").width}}>
-                        <DataTable.Pagination style={this.state.orientation == 'portrait' ? portraitStyles.pagination : landscapeStyles.pagination}
-                            page={this.state.pageNumber}
-                            numberOfPages={Math.ceil(this.state.customersOriginal.length / 5)}
-                            onPageChange={page => this.onPageChange(page)}
-                            label={`${this.state.pageFrom}-${this.state.pageTo} of ${this.state.customersOriginal.length}`}
-                        />
+                        <ShowPagination customers={this.props.navigation.state.params.customerList} />
                         <DataTable.Header>
                             <DataTable.Title>First Name</DataTable.Title>
                             <DataTable.Title>Last Name</DataTable.Title>
                         </DataTable.Header>
 
                         <ScrollView showsVerticalScrollIndicator={false}>
-                            <Customers customers={this.state.customers} onSelect={this.onSelect} />
+                            <Customers customers={this.props.navigation.state.params.customerList} onSelect={this.onSelect} />
                         </ScrollView>
                     </DataTable>
 

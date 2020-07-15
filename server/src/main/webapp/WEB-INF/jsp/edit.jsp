@@ -24,7 +24,7 @@
     
 
 </head>
-<body>
+<body style="background-image: linear-gradient(rgba(138, 186, 211, 255), rgba(252, 246, 245, 255), rgba(252, 246, 245, 255), rgba(252, 246, 245, 255), rgba(138, 186, 211, 255))">
 
     <header>  
         <div class="text-center"><img src="/images/app-logo.png" alt="Lemme In logo"></div>       
