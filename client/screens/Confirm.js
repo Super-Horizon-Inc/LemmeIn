@@ -6,11 +6,12 @@ const styles = StyleSheet.create({
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
-      marginTop: 22
+      marginTop: 22,
+      backgroundColor: '#8ABAD3FF',
     },
     modalView: {
+      backgroundColor:'#FCF6F5FF',
       margin: 20,
-      backgroundColor: 'white',
       borderRadius: 20,
       padding: 35,
       alignItems: 'center',
