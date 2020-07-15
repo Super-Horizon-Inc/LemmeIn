@@ -7,10 +7,10 @@ const portraitStyles = StyleSheet.create({
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: '#8ABAD3FF',
+      backgroundColor: '#6f6d6dFF',
     },
     modalView: {
-      backgroundColor:'#FCF6F5FF',
+      backgroundColor:'#043030FF',
       borderRadius: 20,
       marginHorizontal: 10,
       padding: 40,
@@ -25,11 +25,13 @@ const portraitStyles = StyleSheet.create({
     },
     modalText: {
       marginBottom: 15,
-      textAlign: 'center'
+      textAlign: 'center',
+      color: 'white'
     },
     labelText: {
       marginTop: 15,
       fontWeight:'bold',
+      color: 'white'
     }
   });
 
@@ -38,10 +40,10 @@ const landscapeStyles = StyleSheet.create({
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: '#8ABAD3FF',
+      backgroundColor: '#6f6d6dFF',
     },
     modalView: {
-      backgroundColor:'#FCF6F5FF',
+      backgroundColor:'#043030FF',
       borderRadius: 20,
       paddingVertical: 8,
       paddingHorizontal: 40,
@@ -57,11 +59,13 @@ const landscapeStyles = StyleSheet.create({
     },
     modalText: {
       marginBottom: 8,
-      textAlign: 'center'
+      textAlign: 'center',
+      color: 'white'
     },
     labelText: {
       marginTop: 8,
       fontWeight:'bold',
+      color: 'white'
     }
   });
   
@@ -105,25 +109,25 @@ export default class CustomerInformation extends Component {
                                 <Text style={[this.getStyle().labelText, {textAlign:'center'}]}>Is this your information?</Text>                               
                                 <View>    
                                     <Text style={this.getStyle().labelText}>First Name: </Text>               
-                                    <Text>{this.props.customer.firstName}</Text>
+                                    <Text style={{color:'white'}}>{this.props.customer.firstName}</Text>
                                     <Text style={this.getStyle().labelText}>Last Name: </Text>
-                                    <Text>{this.props.customer.lastName}</Text>
+                                    <Text style={{color:'white'}}>{this.props.customer.lastName}</Text>
                                     <Text style={this.getStyle().labelText}>Phone Number: </Text>
-                                    <Text>{this.props.customer.phoneNumber}</Text>
+                                    <Text style={{color:'white'}}>{this.props.customer.phoneNumber}</Text>
                                     <Text style={this.getStyle().labelText}>Email: </Text>
-                                    <Text>{this.props.customer.email}</Text>
+                                    <Text style={{color:'white'}}>{this.props.customer.email}</Text>
                                     <Text style={this.getStyle().labelText}>Date of Birth: </Text>
-                                    <Text>{this.props.customer.dob}</Text>
+                                    <Text style={{color:'white'}}>{this.props.customer.dob}</Text>
                                     <Text style={this.getStyle().labelText}>Visiting Times: </Text>
-                                    <Text>{this.props.customer.visitCounter}</Text>
+                                    <Text style={{color:'white'}}>{this.props.customer.visitCounter}</Text>
                                 </View>
                             </View>
                             <View style={{flexDirection:'row'}}>
                                 <View style={{width: '50%'}}>
-                                    <Button title="Yes" type="solid" onPress={this.props.done} style={{width: '90%', padding: '5%'}} />
+                                    <Button title="Yes" buttonStyle={{backgroundColor:'#376363FF', color:'white'}} onPress={this.props.done} style={{width: '90%', padding: '5%'}} />
                                 </View>
                                 <View style={{width: "50%"}}>
-                                    <Button title="No" type="solid" onPress={this.props.hideModal} style={{width: '90%', padding: '5%'}} />
+                                    <Button title="No" buttonStyle={{backgroundColor:'#376363FF', color:'white'}} onPress={this.props.hideModal} style={{width: '90%', padding: '5%'}} />
                                 </View>
                             </View>     
                         </View>

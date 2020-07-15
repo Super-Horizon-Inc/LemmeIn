@@ -7,10 +7,10 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       alignItems: 'center',
       marginTop: 22,
-      backgroundColor: '#8ABAD3FF',
+      backgroundColor: '#6f6d6dFF',
     },
     modalView: {
-      backgroundColor:'#FCF6F5FF',
+      backgroundColor:'#043030FF',
       margin: 20,
       borderRadius: 20,
       padding: 35,
@@ -26,7 +26,8 @@ const styles = StyleSheet.create({
     },
     modalText: {
       marginBottom: 15,
-      textAlign: 'center'
+      textAlign: 'center',
+      color: 'white',
     }
   });
   

@@ -163,10 +163,8 @@ export default class CustomerList extends Component {
     render() {
 
         return (
-            <LinearGradient colors={['#8ABAD3FF', '#FCF6F5FF', '#FCF6F5FF', '#FCF6F5FF', '#8ABAD3FF']} style={{position: 'absolute', left: 0, right: 0, top: 0, height: '100%'}} >
-                <SafeAreaView style={{flex:1,marginTop: 50}}>
-                    <Logo/>
-
+            <LinearGradient colors={['#043030FF', '#6f6d6dFF', 'transparent', '#043030FF']} style={{position: 'absolute', left: 0, right: 0, top: 0, height: '100%'}} >
+                <SafeAreaView style={{flex:1,marginTop: 100}}>
                     <View style={{alignItems: 'center', paddingBottom: 10}}>
                         {this.props.navigation.state.params.selectedIndex == 0 ? 
                             <Text style={{fontWeight:'bold'}}>Entered Phone Number: {this.state.customers[0].phoneNumber}</Text> :
@@ -189,7 +187,7 @@ export default class CustomerList extends Component {
                                 onPageChange={page => this.onPageChange(page)}
                                 label={`${this.state.pageFrom}-${this.state.pageTo} of ${this.state.customersOriginal.length}`}
                             />
-                            
+
                             <DataTable.Header>
                                 <DataTable.Title>First Name</DataTable.Title>
                                 <DataTable.Title>Last Name</DataTable.Title>
@@ -199,7 +197,7 @@ export default class CustomerList extends Component {
                         </DataTable>
                     </ScrollView>
                     <View>
-                        <Button title="None" type="solid" onPress={this.cancel} style={{ paddingLeft: '25%', paddingRight: '25%', paddingTop: '5%' }} />
+                        <Button title="None" buttonStyle={{backgroundColor:'#376363FF'}} onPress={this.cancel} style={{ paddingLeft: '25%', paddingRight: '25%', paddingTop: '5%', marginBottom: '20%' }} />
                     </View>
                 </SafeAreaView>
             </LinearGradient>
