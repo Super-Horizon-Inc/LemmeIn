@@ -2,15 +2,15 @@ import React, { Component } from 'react';
 import { StyleSheet, View, Modal, Text, Dimensions } from 'react-native';
 import { Button } from 'react-native-elements';
 
-
 const portraitStyles = StyleSheet.create({
     centeredView: {
       flex: 1,
       justifyContent: 'center',
-      alignItems: 'center'
+      alignItems: 'center',
+      backgroundColor: '#8ABAD3FF',
     },
     modalView: {
-      backgroundColor: 'white', 
+      backgroundColor:'#FCF6F5FF',
       borderRadius: 20,
       marginHorizontal: 10,
       padding: 40,
@@ -38,9 +38,10 @@ const landscapeStyles = StyleSheet.create({
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
+      backgroundColor: '#8ABAD3FF',
     },
     modalView: {
-      backgroundColor: 'white', 
+      backgroundColor:'#FCF6F5FF',
       borderRadius: 20,
       paddingVertical: 8,
       paddingHorizontal: 40,
@@ -94,7 +95,7 @@ export default class CustomerInformation extends Component {
 
     render () {
 
-        return (
+        return (          
             <View style={this.getStyle().centeredView}>
                 <Modal transparent = {true} visible = { this.props.isVisible } 
                         supportedOrientations={["portrait", "landscape"]} onOrientationChange={this.onOrientationChange}>
@@ -128,7 +129,7 @@ export default class CustomerInformation extends Component {
                         </View>
                     </View>
                 </Modal>
-            </View>           
+            </View>        
         )           
     }
 }

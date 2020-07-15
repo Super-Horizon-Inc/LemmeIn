@@ -1,10 +1,11 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { KeyboardAvoidingView, StyleSheet, View, Platform } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Input, ButtonGroup, Button } from 'react-native-elements';
 import Logo from './Logo.js';
 import Confirm from './Confirm.js';
 import ValidationComponent from 'react-native-form-validator';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const styles = StyleSheet.create({
     container: {
@@ -12,7 +13,6 @@ const styles = StyleSheet.create({
     },
     inner: {
         flex: 1,
-        backgroundColor: '#fff',
         justifyContent: 'center',
         top: -110,
     },
@@ -20,7 +20,8 @@ const styles = StyleSheet.create({
         width: '85%',
         position: 'absolute',
         left: '7%',
-        top: '130%'
+        top: '130%',
+        color: 'white'
     },
     button: {
         top: 150,
@@ -37,11 +38,6 @@ export default class Home extends ValidationComponent {
 
         this.state = {
             selectedIndex: 0,
-            // label: "Phone Number",
-            // placeholder: "(512) 123-4567",
-            // icon: "phone",
-            // keyboardType: "phone-pad",
-            // returnKeyType: {returnKeyType:'done'}, // setting returnKeyType property at runtime - dynamically
             email: "",
             phone: "",
             isValidPhoneNumber: true,
@@ -66,11 +62,6 @@ export default class Home extends ValidationComponent {
         if(selectedIndex == 0) {
 
             this.setState({ 
-                // label: "Phone Number", 
-                // placeholder: "(512) 123-4567",
-                // icon: "phone",
-                // keyboardType: "phone-pad",
-                // returnKeyType: {returnKeyType:'done'},
                 email: "",
             });
 
@@ -84,11 +75,6 @@ export default class Home extends ValidationComponent {
         {
 
             this.setState({
-                // label: "Email Address", 
-                // placeholder: "email@address.com",
-                // icon: "envelope",
-                // keyboardType: "email-address",
-                // returnKeyType: null,
                 isValidPhoneNumber: true,
                 phone: "",
             });
@@ -130,7 +116,7 @@ export default class Home extends ValidationComponent {
                     confirmText: "Please wait ... \nWe are sending " + confirmSubtext + this.state.email,
                 });
     
-                fetch('https://d7ec0e5e121e.ngrok.io/lemmein/customers', {
+                fetch('https://1e22fe88c860.ngrok.io/lemmein/customers', {
                     method: 'POST',
                     headers: {
                         Accept : 'application/json',
@@ -192,15 +178,6 @@ export default class Home extends ValidationComponent {
 
     }
 
-    // formatPhoneNumber = (phoneNumberString) => {
-    //     var cleaned = ('' + phoneNumberString).replace(/\D/g, '')
-    //     var match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/)
-    //     if (match) {
-    //         return '(' + match[1] + ') ' + match[2] + '-' + match[3];
-    //     }
-    //     return null;
-    // }
-
     formatPhoneNumber = (phoneNumberString) => {
         var cleaned = ('' + phoneNumberString).replace(/\D/g, '')
         var match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/)
@@ -218,63 +195,59 @@ export default class Home extends ValidationComponent {
     render () {
 
         return (
-            <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"}
-                                    keyboardVerticalOffset={
-                                        Platform.select({
-                                            ios: () => {
-                                                if(this.state.selectedIndex == 0) {
-                                                    return 150;
+            <LinearGradient colors={['#8ABAD3FF', '#FCF6F5FF', '#FCF6F5FF', '#FCF6F5FF', '#8ABAD3FF']} style={{position: 'absolute', left: 0, right: 0, top: 0, height: '100%'}} >
+                <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"}
+                                        keyboardVerticalOffset={
+                                            Platform.select({
+                                                ios: () => {
+                                                    if(this.state.selectedIndex == 0) {
+                                                        return 150;
+                                                    }
+                                                    else{
+                                                        return 140;
+                                                    }
                                                 }
-                                                else{
-                                                    return 140;
-                                                }
-                                            }
-                                        })()
-                                    }
-                                    style={styles.container}>
-                <View style={styles.inner}>
-                    <View style={{ height:0 }}>
-                        <Confirm isVisible={this.state.isConfirmVisible} text={this.state.confirmText} />
-                    </View>
-                    <Logo />
-                    <View>
-                        <View>
-                            <ButtonGroup onPress={this.updateIndex} selectedIndex={this.state.selectedIndex}
-                                        buttons={["Phone Number", "Email Address"]} containerStyle={{height: 100}} />
-                                       
-                                {/* <Input containerStyle={styles.input} label={this.state.label}
-                                        placeholder={this.state.placeholder}
-                                        leftIcon={<Icon name={this.state.icon} size={24} color='black' />}
-                                        keyboardType={this.state.keyboardType}
-                                        {...this.state.returnKeyType}
-                                        onChangeText={text => this.setState({input: text}) }
-                                        value={this.state.input} /> */}
-                            
-                            {this.state.selectedIndex == 1 
-                                ?
-                                    <Input ref="email" containerStyle={styles.input} label={"Email Address"}
-                                        placeholder={"email@address.com"} 
-                                        leftIcon={<Icon name={"envelope"} size={24} color='black' />}
-                                        keyboardType={"email-address"}
-                                        onChangeText={ text => this.setState({email: text}) } 
-                                        value={this.state.email}
-                                        errorMessage={this.isFieldInError('email') ? this.getErrorMessages() : ""} />
-                                :
-                                    <Input ref="phone" containerStyle={styles.input} label={"Phone Number"}
-                                        placeholder={"(512) 123-4567"} 
-                                        leftIcon={<Icon name={"phone"} size={24} color='black' />}
-                                        keyboardType={"phone-pad"} returnKeyType={"done"}
-                                        onChangeText={ (text) => {this.onPhoneChange(text)} } 
-                                        value={this.state.phone}
-                                        errorMessage={!this.state.isValidPhoneNumber ? "The field \"phone\" must be a valid phone number." : ""} />
-                            }                         
+                                            })()
+                                        }
+                                        style={styles.container}>
+                    
+                        <View style={styles.inner}>
+                            <View style={{ height:0 }}>
+                                <Confirm isVisible={this.state.isConfirmVisible} text={this.state.confirmText} />
+                            </View>
+                            <Logo />
+                            <View>
+                                <View>
+                                    <ButtonGroup onPress={this.updateIndex} selectedIndex={this.state.selectedIndex}
+                                                buttons={["Phone Number", "Email Address"]} containerStyle={{height: 100, borderColor: '#FCF6F5FF'}} />
+                                    
+                                    {this.state.selectedIndex == 1 
+                                        ?
+                                            <Input ref="email" containerStyle={styles.input} label={"Email Address"}
+                                                placeholder={"email@address.com"} 
+                                                leftIcon={<Icon name={"envelope"} size={24} color='black' />}
+                                                keyboardType={"email-address"}
+                                                onChangeText={ text => this.setState({email: text}) } 
+                                                value={this.state.email}
+                                                errorMessage={this.isFieldInError('email') ? this.getErrorMessages() : ""} />
+                                        :
+                                            <Input ref="phone" containerStyle={styles.input} label={"Phone Number"}
+                                                placeholder={"(512) 123-4567"} 
+                                                leftIcon={<Icon name={"phone"} size={24} color='black' />}
+                                                keyboardType={"phone-pad"} returnKeyType={"done"}
+                                                onChangeText={ (text) => {this.onPhoneChange(text)} } 
+                                                value={this.state.phone}
+                                                errorMessage={!this.state.isValidPhoneNumber ? "The field \"phone\" must be a valid phone number." : ""} />
+                                    }                         
+                                </View>
+                                <View style={{alignItems: 'center'}}>
+                                    <Button containerStyle={styles.button} title="Lemme In" type="solid" onPress={this.lemmeIn} />
+                                </View>
+                            </View>
                         </View>
-                        <View style={{alignItems: 'center'}}>
-                            <Button containerStyle={styles.button} title="Lemme In" type="solid" onPress={this.lemmeIn} />
-                        </View>
-                    </View>
-                </View>
-            </KeyboardAvoidingView>
+                    
+                </KeyboardAvoidingView>
+            </LinearGradient>
         );
     }      
 }
