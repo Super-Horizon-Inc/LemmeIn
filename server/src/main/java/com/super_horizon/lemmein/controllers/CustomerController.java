@@ -8,6 +8,7 @@ import com.super_horizon.lemmein.models.documents.Customer;
 import com.super_horizon.lemmein.services.CustomerService;
 import com.super_horizon.lemmein.services.EmailService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,7 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 
 @RestController
-@RequestMapping("/lemmein/customers")
+@RequestMapping("/lemmein")
 public class CustomerController {
 
     @Autowired
@@ -24,7 +25,7 @@ public class CustomerController {
     @Autowired
     private EmailService emailService;
 
-    @PostMapping
+    @PostMapping(value="/admin")
     public ResponseEntity<List<Customer>> showOrAdd(@RequestBody Map<String, String> query) {
         try {
 
@@ -43,7 +44,7 @@ public class CustomerController {
         }
     }
 
-    @GetMapping(value="/{id}/edit")
+    @GetMapping(value="/customers/{id}/edit")
     public ModelAndView edit(@PathVariable String id) {
 
         try {
@@ -60,7 +61,7 @@ public class CustomerController {
         }
     }
 
-    @GetMapping
+    @GetMapping(value="/admin")
     public ResponseEntity<List<Customer>> searchAll() {
         try {
             List<Customer> customers = customerService.searchAll();          
@@ -71,10 +72,14 @@ public class CustomerController {
         }
     }
 
-    @PutMapping(value="/")
+    @PutMapping(value="/admin")
     public ResponseEntity<Customer> update( @RequestBody Customer customer) {
         try {
             Customer _customer = customerService.update(customer);
+
+            //log out automatically by making cookie invalid
+            SecurityContextHolder.getContext().setAuthentication(null);
+
             return new ResponseEntity<> (_customer, HttpStatus.OK);
         }
         catch (Exception e) {
@@ -82,7 +87,7 @@ public class CustomerController {
         }       
     }
 
-    @PostMapping(value="/email")
+    @PostMapping(value="/admin/email")
     public String sendEmail(@RequestBody Customer customer) {
         
         if (!Objects.isNull(customer)) {

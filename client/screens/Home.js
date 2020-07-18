@@ -6,6 +6,7 @@ import Logo from './Logo.js';
 import Confirm from './Confirm.js';
 import ValidationComponent from 'react-native-form-validator';
 import { LinearGradient } from 'expo-linear-gradient';
+import base64 from 'react-native-base64';
 
 const styles = StyleSheet.create({
     container: {
@@ -116,10 +117,11 @@ export default class Home extends ValidationComponent {
                     isConfirmVisible: true, 
                     confirmText: "Please wait ... \nWe are sending " + confirmSubtext + this.state.email,
                 });
-    
-                fetch('https://1e22fe88c860.ngrok.io/lemmein/customers', {
+
+                fetch('https://4023feb8e749.ngrok.io/lemmein/admin', {
                     method: 'POST',
                     headers: {
+                        'Authorization' : 'Basic ' + base64.encode("lemmein:lemmein0"),
                         Accept : 'application/json',
                         'Content-Type' : 'application/json'
                     },
@@ -165,6 +167,7 @@ export default class Home extends ValidationComponent {
                             confirmText: "",
                         });
                     }, 5000);
+                    console.log(error);
                 });
     
             }

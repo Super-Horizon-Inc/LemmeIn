@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -116,6 +117,11 @@
                         </div>
                     </div>
 
+                    <!-- get username and password -->
+                    <spring:eval expression="@environment.getProperty('admin.username')" var="Username" />
+                    <spring:eval expression="@environment.getProperty('admin.password')" var="Password" />
+
+
                     <script>
                         // Example starter JavaScript for disabling form submissions if there are invalid fields
                         (function() {
@@ -175,7 +181,7 @@
 
                             $.ajax({
                                 type : 'PUT',
-                                url : 'http://localhost:8080/lemmein/customers/',
+                                url : 'http://localhost:8080/lemmein/admin',
                                 contentType: 'application/json',
                                 data : JSON.stringify({
                                     
@@ -188,6 +194,11 @@
                                     email: document.getElementsByName("email")[0].value != "" ? document.getElementsByName("email")[0].value : "${customer.email}",
 
                                 }),
+                                beforeSend : function(xhr) {
+                                    
+                                    xhr.setRequestHeader("Authorization", "Basic " + btoa("${Username}:${Password}"));
+                                    
+                                },
                                 success : function(data, status, xhr) {
                                     $('#visitConfirmModal').modal('show'); 
                                     
@@ -203,7 +214,7 @@
 
                                 },
                                 error: function(xhr, status, error){
-                                    console.log("${customer}");
+                                    console.log(xhr);
                                     console.error(error);
                                 }
                             });
