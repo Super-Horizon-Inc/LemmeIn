@@ -6,6 +6,7 @@ import CustomerInformation from './CustomerInformation.js';
 import Confirm from './Confirm.js';
 import Logo from './Logo.js';
 import { LinearGradient } from 'expo-linear-gradient';
+import base64 from 'react-native-base64';
 
 
 class Customers extends Component {
@@ -80,9 +81,10 @@ export default class CustomerList extends Component {
 
             this.setState({isConfirmVisible: true, confirmText: "Please wait ... \nWe are sending email to:\n" + this.state.customer.email});
         
-            fetch('https://d7ec0e5e121e.ngrok.io/lemmein/customers/email', {
+            fetch('https://4023feb8e749.ngrok.io/lemmein/admin/email', {
                 method: 'POST',
                 headers: {
+                    'Authorization' : 'Basic ' + base64.encode("lemmein:lemmein0"),
                     Accept: 'application/json',
                     'Content-Type' : 'application/json'
                 },
