@@ -117,9 +117,9 @@
                         </div>
                     </div>
 
-                    <!-- get username and password -->
-                    <spring:eval expression="@environment.getProperty('admin.username')" var="Username" />
-                    <spring:eval expression="@environment.getProperty('admin.password')" var="Password" />
+
+                    <spring:eval expression="@environment.getProperty('admin.username')" var="username" />
+                    <spring:eval expression="@environment.getProperty('admin.password')" var="password" />
 
 
                     <script>
@@ -196,7 +196,7 @@
                                 }),
                                 beforeSend : function(xhr) {
                                     
-                                    xhr.setRequestHeader("Authorization", "Basic " + btoa("${Username}:${Password}"));
+                                    xhr.setRequestHeader("Authorization", "Basic " + btoa("${username}:${password}"));
                                     
                                 },
                                 success : function(data, status, xhr) {

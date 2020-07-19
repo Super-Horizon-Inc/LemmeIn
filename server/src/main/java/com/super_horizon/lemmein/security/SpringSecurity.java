@@ -20,7 +20,8 @@ public class SpringSecurity extends WebSecurityConfigurerAdapter {
 
         http.csrf().disable().authorizeRequests()
             .antMatchers("/lemmein/customers/**").permitAll()
-            .antMatchers("/lemmein/admin/**").access("hasRole('ADMIN')")
+            //.antMatchers("/lemmein/admin/update").access("hasRole('USER')")
+            .antMatchers("/lemmein/admin/**").access("hasRole('USER')")
             .and().httpBasic()           
             .authenticationEntryPoint(authEntryPoint)
             .and().sessionManagement().disable();        
@@ -29,6 +30,7 @@ public class SpringSecurity extends WebSecurityConfigurerAdapter {
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication()
-        .withUser("lemmein").password("{noop}lemmein0").roles("ADMIN");
+        .withUser("lemmein").password("{noop}lemmein0").roles("USER");
+        //.and().withUser("lemmein1").password("{noop}lemmein0").roles("ADMIN");
 	}
 }
