@@ -61,16 +61,16 @@ public class CustomerController {
         }
     }
 
-    @GetMapping(value="/admin")
-    public ResponseEntity<List<Customer>> searchAll() {
-        try {
-            List<Customer> customers = customerService.searchAll();          
-            return new ResponseEntity<> (customers, HttpStatus.OK);
-        }
-        catch (Exception ex) {
-            return new ResponseEntity<> (null, HttpStatus.EXPECTATION_FAILED);
-        }
-    }
+    // @GetMapping(value="/admin")
+    // public ResponseEntity<List<Customer>> searchAll() {
+    //     try {
+    //         List<Customer> customers = customerService.searchAll();          
+    //         return new ResponseEntity<> (customers, HttpStatus.OK);
+    //     }
+    //     catch (Exception ex) {
+    //         return new ResponseEntity<> (null, HttpStatus.EXPECTATION_FAILED);
+    //     }
+    // }
 
     @PutMapping(value="/admin")
     public ResponseEntity<Customer> update( @RequestBody Customer customer) {

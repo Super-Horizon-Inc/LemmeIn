@@ -81,7 +81,7 @@ export default class CustomerList extends Component {
 
             this.setState({isConfirmVisible: true, confirmText: "Please wait ... \nWe are sending email to:\n" + this.state.customer.email});
         
-            fetch('https://4023feb8e749.ngrok.io/lemmein/admin/email', {
+            fetch('https://6a6663ab00ec.ngrok.io/lemmein/admin/email', {
                 method: 'POST',
                 headers: {
                     'Authorization' : 'Basic ' + base64.encode("lemmein:lemmein0"),
