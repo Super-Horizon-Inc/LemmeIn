@@ -118,7 +118,7 @@ export default class Home extends ValidationComponent {
                     confirmText: "Please wait ... \nWe are sending " + confirmSubtext + this.state.email,
                 });
 
-                fetch('https://4023feb8e749.ngrok.io/lemmein/admin', {
+                fetch('https://6a6663ab00ec.ngrok.io/lemmein/admin', {
                     method: 'POST',
                     headers: {
                         'Authorization' : 'Basic ' + base64.encode("lemmein:lemmein0"),
