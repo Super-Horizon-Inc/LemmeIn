@@ -1,6 +1,6 @@
-client/node_modules/**/*
-client/.expo/*
-client/.vscode/*
+node_modules/**/*
+.expo/*
+.vscode/*
 npm-debug.*
 *.jks
 *.p8
