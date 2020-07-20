@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     },
     buttonContainer:{
         marginTop: '50%',
-        //color: 'white',
+        color: 'white',
         width: '85%',
         position: 'absolute',
     }
@@ -118,7 +118,7 @@ export default class Home extends ValidationComponent {
                     confirmText: "Please wait ... \nWe are sending " + confirmSubtext + this.state.email,
                 });
 
-                fetch('https://6a6663ab00ec.ngrok.io/lemmein/admin', {
+                fetch('https://d095626af21f.ngrok.io/lemmein/admin', {
                     method: 'POST',
                     headers: {
                         'Authorization' : 'Basic ' + base64.encode("lemmein:lemmein0"),
@@ -198,7 +198,7 @@ export default class Home extends ValidationComponent {
 
     render () {
         return (
-            <LinearGradient colors={['#043030FF', '#6f6d6dFF', 'transparent', '#043030FF']} style={{position: 'absolute', left: 0, right: 0, top: 0, height: '100%'}} >
+            <LinearGradient colors={['#043030FF', '#6f6d6dFF', '#6f6d6dFF', '#043030FF']} style={{position: 'absolute', left: 0, right: 0, top: 0, height: '100%'}} >
                 <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"}
                                         keyboardVerticalOffset={
                                             Platform.select({
@@ -226,17 +226,17 @@ export default class Home extends ValidationComponent {
                                     
                                     {this.state.selectedIndex == 1 
                                         ?
-                                            <Input ref="email" containerStyle={styles.input} labelStyle={{color: 'black'}} label={"Email Address"}
-                                                placeholder={"email@address.com"} 
-                                                leftIcon={<Icon name={"envelope"} size={24} color='black' />}
+                                            <Input ref="email" containerStyle={styles.input} labelStyle={{color: 'white'}} label={"Email Address"}
+                                                placeholder={"email@address.com"} inputStyle={{color:'white'}}
+                                                leftIcon={<Icon name={"envelope"} size={24} color='white' />}
                                                 keyboardType={"email-address"}
                                                 onChangeText={ text => this.setState({email: text}) } 
                                                 value={this.state.email}
                                                 errorMessage={this.isFieldInError('email') ? this.getErrorMessages() : ""} />
                                         :
-                                            <Input ref="phone" containerStyle={styles.input} labelStyle={{color: 'black'}} label={"Phone Number"}
-                                                placeholder={"(512) 123-4567"} 
-                                                leftIcon={<Icon name={"phone"} size={24} color='black' />}
+                                            <Input ref="phone" containerStyle={styles.input} labelStyle={{color: 'white'}} label={"Phone Number"}
+                                                placeholder={"(512) 123-4567"} inputStyle={{color:'white'}}
+                                                leftIcon={<Icon name={"phone"} size={24} color='white' />}
                                                 keyboardType={"phone-pad"} returnKeyType={"done"}
                                                 onChangeText={ (text) => {this.onPhoneChange(text)} } 
                                                 value={this.state.phone}
@@ -244,8 +244,7 @@ export default class Home extends ValidationComponent {
                                     }                         
                                 </View>
                                 <View style={{alignItems:'center'}}>
-                                    <Button 
-                                     containerStyle={styles.buttonContainer} buttonStyle={{backgroundColor:'#376363FF'}} title="Lemme In" onPress={this.lemmeIn} />
+                                    <Button containerStyle={styles.buttonContainer} buttonStyle={{backgroundColor:'#376363FF'}} title="Lemme In" onPress={this.lemmeIn} />
                                 </View>
                             </View>
                         </View>
