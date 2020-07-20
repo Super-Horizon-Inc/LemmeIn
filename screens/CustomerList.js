@@ -4,7 +4,6 @@ import { Button } from 'react-native-elements';
 import { DataTable } from 'react-native-paper'; 
 import CustomerInformation from './CustomerInformation.js';
 import Confirm from './Confirm.js';
-import Logo from './Logo.js';
 import { LinearGradient } from 'expo-linear-gradient';
 import base64 from 'react-native-base64';
 
@@ -81,7 +80,7 @@ export default class CustomerList extends Component {
 
             this.setState({isConfirmVisible: true, confirmText: "Please wait ... \nWe are sending email to:\n" + this.state.customer.email});
         
-            fetch('https://6a6663ab00ec.ngrok.io/lemmein/admin/email', {
+            fetch('https://d095626af21f.ngrok.io/lemmein/admin/email', {
                 method: 'POST',
                 headers: {
                     'Authorization' : 'Basic ' + base64.encode("lemmein:lemmein0"),
@@ -165,14 +164,14 @@ export default class CustomerList extends Component {
     render() {
 
         return (
-            <LinearGradient colors={['#043030FF', '#6f6d6dFF', 'transparent', '#043030FF']} style={{position: 'absolute', left: 0, right: 0, top: 0, height: '100%'}} >
+            <LinearGradient colors={['#043030FF', '#6f6d6dFF', '#6f6d6dFF', '#043030FF']} style={{position: 'absolute', left: 0, right: 0, top: 0, height: '100%'}} >
                 <SafeAreaView style={{flex:1,marginTop: 100}}>
                     <View style={{alignItems: 'center', paddingBottom: 10}}>
                         {this.props.navigation.state.params.selectedIndex == 0 ? 
-                            <Text style={{fontWeight:'bold'}}>Entered Phone Number: {this.state.customers[0].phoneNumber}</Text> :
-                            <Text style={{fontWeight:'bold'}}>Entered Email: {this.state.customers[0].email}</Text>
+                            <Text style={{fontWeight:'bold', color:'white'}}>Entered Phone Number: {this.state.customers[0].phoneNumber}</Text> :
+                            <Text style={{fontWeight:'bold', color:'white'}}>Entered Email: {this.state.customers[0].email}</Text>
                         }
-                        <Text style={{fontWeight:'bold'}}>Who are you?</Text>
+                        <Text style={{fontWeight:'bold', color:'white'}}>Who are you?</Text>
                     </View>
 
                     <View style={{height:0}}>
