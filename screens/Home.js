@@ -1,12 +1,15 @@
 import React from 'react';
-import { KeyboardAvoidingView, StyleSheet, View, Platform } from 'react-native';
+import { KeyboardAvoidingView, StyleSheet, View, Platform , TouchableOpacity,} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Input, ButtonGroup, Button } from 'react-native-elements';
 import Logo from './Logo.js';
 import Confirm from './Confirm.js';
+import ConfirmLogout from './ConfirmLogout.js';
 import ValidationComponent from 'react-native-form-validator';
 import { LinearGradient } from 'expo-linear-gradient';
-import base64 from 'react-native-base64';
+import UserService from '../services/UserService.js';
+import AuthService from '../services/AuthService.js';
+
 
 const styles = StyleSheet.create({
     container: {
@@ -38,6 +41,8 @@ export default class Home extends ValidationComponent {
 
         super(props);
 
+        this.authService = new AuthService();
+
         this.state = {
             selectedIndex: 0,
             email: "",
@@ -45,6 +50,8 @@ export default class Home extends ValidationComponent {
             isValidPhoneNumber: true,
             isConfirmVisible: false,
             confirmText: "",
+            isLogoutVisible: false,
+            logoutText: ""
             
         };
 
@@ -85,7 +92,7 @@ export default class Home extends ValidationComponent {
 
     };
 
-    lemmeIn () {
+    async lemmeIn () {
 
         if (this.state.selectedIndex == 0) { 
             
@@ -102,61 +109,52 @@ export default class Home extends ValidationComponent {
                 email: {email: true}
             })
         }
-        
-        setTimeout( () => {
+      
+        //setTimeout( async () => {
+
             if (!this.isFieldInError("email") && this.state.isValidPhoneNumber) {
 
                 const isPhoneNumber = this.state.selectedIndex == 0 ? true : false;
+
                 let phoneNumber = "";
                 if (isPhoneNumber) {
                     phoneNumber = this.state.phone.split('+1 ')[0] != this.state.phone ? this.state.phone.split('+1 ')[1] : this.state.phone;
-
                 }
-                const confirmSubtext = isPhoneNumber ? "a message to: " : "an email to: ";
+
+                const confirmSubtext = isPhoneNumber ? "phone number: " + this.state.phone : "email: " + this.state.email;
+
                 this.setState({
                     isConfirmVisible: true, 
-                    confirmText: "Please wait ... \nWe are sending " + confirmSubtext + this.state.email,
+                    confirmText: "Please wait ... \nWe are looking for your " + confirmSubtext + " in our database."
                 });
 
-                fetch('https://d095626af21f.ngrok.io/lemmein/admin', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization' : 'Basic ' + base64.encode("lemmein:lemmein0"),
-                        Accept : 'application/json',
-                        'Content-Type' : 'application/json'
-                    },
-                    body: isPhoneNumber ? JSON.stringify({phoneNumber:phoneNumber}) : JSON.stringify({email:this.state.email.toLowerCase()})
-                })
-                .then(response => 
-                    response.json()            
-                )
-                .then(json => {
-                    //const selectedIndex = this.state.selectedIndex;
-                    //this.props.navigation.navigate("CustomerScreen", {selectedIndex: selectedIndex});
-    
-                    if (json[0].isNew) {
-    
-                        this.setState({
-                            isConfirmVisible: true,                    
-                            confirmText: "Email was sent successfully.\n\n Welcome in!"
-                        });
-    
-                        setTimeout(() => {
+                let userService = new UserService();
+                const username = await this.authService.getCurrentUsername();
+                
+                try {
+                    let customers = isPhoneNumber
+                    ? await userService.showOrAddCustomer({phoneNumber:phoneNumber, username:username})
+                    : await userService.showOrAddCustomer({email:this.state.email.toLowerCase(), username:username});
+        
+                        if (customers[0].isNew) {       
                             this.setState({
-                                isConfirmVisible: false,                         
-                                confirmText: "",
-                                email: "",
+                                isConfirmVisible: true,                    
+                                confirmText: "Email was sent successfully.\n\n Welcome in!"
                             });
-                        }, 2000);
-    
+        
+                            setTimeout(() => {
+                                this.setState({
+                                    isConfirmVisible: false,                         
+                                    confirmText: "",
+                                    //email: "",
+                                });
+                            }, 3000);    
                     }
-                    else {
-    
-                        this.props.navigation.navigate("CustomerListScreen", {customerList: json, selectedIndex: this.state.selectedIndex});
-    
+                    else {    
+                        this.props.navigation.navigate("CustomerListScreen", {customerList: customers, selectedIndex: this.state.selectedIndex});   
                     }
-                })
-                .catch(error => {
+                }
+                catch(error) {
                     this.setState({
                         isConfirmVisible: true,                
                         confirmText: "Sorry! Something went wrong."
@@ -167,12 +165,10 @@ export default class Home extends ValidationComponent {
                             confirmText: "",
                         });
                     }, 5000);
-                    console.log(error);
-                });
-    
+                    //console.log(error);
+                }   
             }
-        }, 0);
-           
+        //}, 0);           
     };
 
     onPhoneChange = (text) => {
@@ -196,6 +192,30 @@ export default class Home extends ValidationComponent {
         this.formatPhoneNumber(this.state.phone) != null ? true : false
     )
 
+    showLogout = () => {
+        this.setState({isLogoutVisible: true});
+    }
+
+    hideLogout = () => {
+        this.setState({isLogoutVisible: false});
+    }
+
+    logoutDone = async (password) => {
+
+        const username = await this.authService.getCurrentUsername();
+        const message = await this.authService.logout({username: username, password: password});
+        if (message.indexOf('Logout successfully.') >= 0) {
+            this.hideLogout();
+            this.props.navigation.navigate("AuthenticationScreen");
+        }
+        else {
+            this.setState({
+                isSettingVisible: true,
+                logoutText: message
+            })
+        }
+    }
+
     render () {
         return (
             <LinearGradient colors={['#043030FF', '#6f6d6dFF', '#6f6d6dFF', '#043030FF']} style={{position: 'absolute', left: 0, right: 0, top: 0, height: '100%'}} >
@@ -217,8 +237,13 @@ export default class Home extends ValidationComponent {
                         <View style={styles.inner}>
                             <View style={{ height:0 }}>
                                 <Confirm isVisible={this.state.isConfirmVisible} text={this.state.confirmText} />
+                                <ConfirmLogout isVisible={this.state.isLogoutVisible} text={this.state.logoutText} done={this.logoutDone} cancel={this.hideLogout} />
                             </View>
-                            <Logo />
+
+                            <TouchableOpacity onPress={ () => {this.showLogout()}}>
+                                <Logo />
+                            </TouchableOpacity>
+
                             <View>
                                 <View>
                                     <ButtonGroup onPress={this.updateIndex} selectedIndex={this.state.selectedIndex} selectedButtonStyle={{backgroundColor:'#376363FF', color: 'white'}}
