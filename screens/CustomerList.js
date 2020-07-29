@@ -5,7 +5,7 @@ import { DataTable } from 'react-native-paper';
 import CustomerInformation from './CustomerInformation.js';
 import Confirm from './Confirm.js';
 import { LinearGradient } from 'expo-linear-gradient';
-import base64 from 'react-native-base64';
+import UserService from '../services/UserService.js';
 
 
 class Customers extends Component {
@@ -60,8 +60,7 @@ export default class CustomerList extends Component {
             customers: customerList.slice(0,customerList.length <= 5 ? customerList.length : 5),
             pageNumber: 0,
             pageFrom: 1,
-            pageTo: customerList.length > 5 ? 5 : customerList.length,
-           
+            pageTo: customerList.length > 5 ? 5 : customerList.length,         
         }
 
         Dimensions.addEventListener("change", () => {
@@ -75,33 +74,22 @@ export default class CustomerList extends Component {
     done = () => {
 
         this.hideModal();
-
-        setTimeout(() => {
+        
+        setTimeout( async () => {
 
             this.setState({isConfirmVisible: true, confirmText: "Please wait ... \nWe are sending email to:\n" + this.state.customer.email});
-        
-            fetch('https://d095626af21f.ngrok.io/lemmein/admin/email', {
-                method: 'POST',
-                headers: {
-                    'Authorization' : 'Basic ' + base64.encode("lemmein:lemmein0"),
-                    Accept: 'application/json',
-                    'Content-Type' : 'application/json'
-                },
-                body: JSON.stringify({id:this.state.customer.id, email:this.state.customer.email})
-            })
-            .then(response => 
-                response.text()
-            )
-            .then(json => {
 
-                this.setState({confirmText: json});
+            try {
+                let responseTextEmail = await new UserService().sendEmailCustomer({id:this.state.customer.id, email:this.state.customer.email});
+
+                this.setState({confirmText: responseTextEmail});
 
                 setTimeout(() => {
-                    this.setState({isConfirmVisible: false, confirmText: ""});
-                    this.props.navigation.navigate('HomeScreen');
-                }, 2000);    
-            })
-            .catch(error => {
+                            this.setState({isConfirmVisible: false, confirmText: ""});
+                            this.props.navigation.navigate('HomeScreen');
+                        }, 2000); 
+            }
+            catch(error) {
                 this.setState({
                     isConfirmVisible: true,                
                     confirmText: "Sorry! Something went wrong."
@@ -109,11 +97,12 @@ export default class CustomerList extends Component {
                 setTimeout(() => {
                     this.setState({
                         isConfirmVisible: false, 
-                        confirmText: "",
+                        confirmText: ""
                     });
                 }, 5000);
-                console.error(error);
-            });
+                //console.log(error);
+            }
+
         }, 0);
      
     }
@@ -133,7 +122,6 @@ export default class CustomerList extends Component {
 
     hideModal = () => {
         this.setState({ isCustInfoVisible: false });
- 
     }
 
     onSelect = (customer) => {
@@ -171,7 +159,7 @@ export default class CustomerList extends Component {
                             <Text style={{fontWeight:'bold', color:'white'}}>Entered Phone Number: {this.state.customers[0].phoneNumber}</Text> :
                             <Text style={{fontWeight:'bold', color:'white'}}>Entered Email: {this.state.customers[0].email}</Text>
                         }
-                        <Text style={{fontWeight:'bold', color:'white'}}>Who are you?</Text>
+                        <Text style={{fontWeight:'bold', color:'white'}}>Pick your name</Text>
                     </View>
 
                     <View style={{height:0}}>
