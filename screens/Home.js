@@ -110,7 +110,7 @@ export default class Home extends ValidationComponent {
             })
         }
       
-        //setTimeout( async () => {
+        setTimeout( async () => {
 
             if (!this.isFieldInError("email") && this.state.isValidPhoneNumber) {
 
@@ -146,7 +146,7 @@ export default class Home extends ValidationComponent {
                                 this.setState({
                                     isConfirmVisible: false,                         
                                     confirmText: "",
-                                    //email: "",
+                                    email: "",
                                 });
                             }, 3000);    
                     }
@@ -168,7 +168,7 @@ export default class Home extends ValidationComponent {
                     //console.log(error);
                 }   
             }
-        //}, 0);           
+        }, 0);           
     };
 
     onPhoneChange = (text) => {

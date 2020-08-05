@@ -2,15 +2,14 @@ import AuthHeader from './AuthHeader.js';
 
 export default class UserService {
 
-    constructor() {
-        
+    constructor() {     
     }
 
     showOrAddCustomer = async (input) => {
         
         let header = await AuthHeader();
 
-        return await fetch('https://31df3a354fd7.ngrok.io/lemme/customers', {
+        return await fetch('https://570b7dd9b158.ngrok.io/lemme/customers', {
             method: 'POST',
             headers: {
                 Accept : 'application/json',
@@ -31,7 +30,7 @@ export default class UserService {
 
         let header = await AuthHeader();
 
-        return await fetch('https://31df3a354fd7.ngrok.io/lemme/customers/email', {
+        return await fetch('https://570b7dd9b158.ngrok.io/lemme/customers/email', {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',

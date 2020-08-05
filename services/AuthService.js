@@ -13,7 +13,7 @@ export default class AuthService {
     
 
     signin = () => {
-        const result = fetch("https://31df3a354fd7.ngrok.io/lemme/user/auth/signin", {
+        const result = fetch("https://570b7dd9b158.ngrok.io/lemme/user/auth/signin", {
             method: 'POST',
             headers: {
                 Accept : 'application/json',
@@ -42,7 +42,7 @@ export default class AuthService {
 
 
     logout = async (input) => {
-        return await fetch("https://31df3a354fd7.ngrok.io/lemme/user/auth/logout", {
+        return await fetch("https://570b7dd9b158.ngrok.io/lemme/user/auth/logout", {
             method: 'POST',
             headers: {
                 Accept : 'application/json',
