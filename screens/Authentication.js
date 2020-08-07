@@ -48,8 +48,8 @@ export default class Authentication extends ValidationComponent {
     lemmeIn = async () => {
 
         this.validate({
-            username: {email: true},
-            password: {minlength:6, maxlength:40}
+            username: {email: true, required: true},
+            password: {minlength:6, maxlength:40, required: true}
         })
 
         if(!this.isFieldInError("username") && !this.isFieldInError("password")) {
@@ -64,17 +64,21 @@ export default class Authentication extends ValidationComponent {
                 
                 let auth = await authService.signin();
                 
-                await ((auth.accessToken != null) 
-                ? this.props.navigation.navigate("HomeScreen") 
-                : this.setState({confirmText : "\nSomething went wrong.\n Please try again."}));
+                if (auth.accessToken != null) {
+                    this.props.navigation.navigate("HomeScreen") 
+                }
+                else {
+                    this.setState({confirmText : "\nSomething went wrong.\n Please try again."});
 
-                setTimeout(() => {
-                    this.setState({
-                        isConfirmVisible: false,
-                        username: "",
-                        password: "",
-                    });
-                }, 5000);
+                    setTimeout(() => {
+                        this.setState({
+                            isConfirmVisible: false,
+                            username: "",
+                            password: "",
+                        });
+                    }, 5000);
+                }
+             
             }
             catch(error) {
                 this.setState({
@@ -120,7 +124,7 @@ export default class Authentication extends ValidationComponent {
                                         leftIcon={<Icon name={"user"} size={24} color='white' />}
                                         onChangeText={ text => this.setState({username: text}) } 
                                         value={this.state.username}
-                                        errorMessage={this.isFieldInError('username') ? this.getErrorsInField('username') : ""} 
+                                        errorMessage={this.isFieldInError('username') ? this.getErrorsInField('username')[0] : ""} 
                                         />
                                 <Input containerStyle={styles.input} labelStyle={{color: 'white'}} label={"Password"}
                                         placeholder={"*******"} inputStyle={{color:'white'}} secureTextEntry={true}
