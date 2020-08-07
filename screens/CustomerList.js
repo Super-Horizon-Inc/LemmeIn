@@ -10,17 +10,15 @@ import UserService from '../services/UserService.js';
 
 class Customers extends Component {
   
-    constructor(props) {
-        
+    constructor(props) {       
         super(props);
-
     }
 
     render () {       
         return (
             this.props.customers.map(customer => {
                 return (
-                    <DataTable.Row onPress={() => { this.props.onSelect(customer)}}>
+                    <DataTable.Row key={customer.id} onPress={() => { this.props.onSelect(customer)}}>
                         <DataTable.Cell>{customer.firstName}</DataTable.Cell>
                         <DataTable.Cell>{customer.lastName}</DataTable.Cell>
                     </DataTable.Row>
@@ -59,7 +57,7 @@ export default class CustomerList extends Component {
             customersOriginal: customerList,
             customers: customerList.slice(0,customerList.length <= 5 ? customerList.length : 5),
             pageNumber: 0,
-            pageFrom: 1,
+            pageFrom: customerList.length > 0 ? 1 : 0,
             pageTo: customerList.length > 5 ? 5 : customerList.length,         
         }
 
@@ -131,21 +129,22 @@ export default class CustomerList extends Component {
     }
 
     onPageChange = (pageNumber) => {
+        if (this.state.customersOriginal.length > 0) {
+            const pageFrom = pageNumber*5 + 1;
 
-        const pageFrom = pageNumber*5 + 1;
+            const sliceFrom = pageFrom == 1 ? 0 : pageFrom - 1;
+            
+            this.setState({
+                pageFrom: pageFrom,
+                pageNumber: pageNumber,
+                customers: this.state.customersOriginal.slice(sliceFrom, this.state.customersOriginal.length <= sliceFrom + 5 ? this.state.customersOriginal.length : sliceFrom + 5)
+            });
 
-        const sliceFrom = pageFrom == 1 ? 0 : pageFrom - 1;
-        
-        this.setState({
-            pageFrom: pageFrom,
-            pageNumber: pageNumber,
-            customers: this.state.customersOriginal.slice(sliceFrom, this.state.customersOriginal.length <= sliceFrom + 5 ? this.state.customersOriginal.length : sliceFrom + 5)
-        });
-
-        const to = (this.state.customersOriginal.length - (pageNumber * 5)) > 5 ? (pageNumber+1) * 5 : this.state.customersOriginal.length;
-        this.setState({                 
-            pageTo: to,
-        });
+            const to = (this.state.customersOriginal.length - (pageNumber * 5)) > 5 ? (pageNumber+1) * 5 : this.state.customersOriginal.length;
+            this.setState({                 
+                pageTo: to,
+            });
+        }
 
     }
 
