@@ -151,13 +151,10 @@ export default class CustomerList extends Component {
     render() {
 
         return (
-            <LinearGradient colors={['#043030FF', '#6f6d6dFF', '#6f6d6dFF', '#043030FF']} style={{position: 'absolute', left: 0, right: 0, top: 0, height: '100%'}} >
+            <LinearGradient colors={['#05346E', '#2B93C1', '#82B7A8']} style={{position: 'absolute', left: 0, right: 0, top: 0, height: '100%'}} >
                 <SafeAreaView style={{flex:1,marginTop: 100}}>
                     <View style={{alignItems: 'center', paddingBottom: 10}}>
-                        {this.props.navigation.state.params.selectedIndex == 0 ? 
-                            <Text style={{fontWeight:'bold', color:'white'}}>Entered Phone Number: {this.state.customers[0].phoneNumber}</Text> :
-                            <Text style={{fontWeight:'bold', color:'white'}}>Entered Email: {this.state.customers[0].email}</Text>
-                        }
+                        <Text style={{fontWeight:'bold', color:'white'}}>Entered Phone Number: {this.state.customers[0].phoneNumber}</Text>    
                         <Text style={{fontWeight:'bold', color:'white'}}>Pick your name</Text>
                     </View>
 

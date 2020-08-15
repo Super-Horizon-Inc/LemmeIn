@@ -1,5 +1,5 @@
 import React from 'react';
-import { KeyboardAvoidingView, StyleSheet, View, Platform , TouchableOpacity,} from 'react-native';
+import { SafeAreaView, StyleSheet, View, Platform, TouchableOpacity, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Input, ButtonGroup, Button } from 'react-native-elements';
 import Logo from './Logo.js';
@@ -9,29 +9,33 @@ import ValidationComponent from 'react-native-form-validator';
 import { LinearGradient } from 'expo-linear-gradient';
 import UserService from '../services/UserService.js';
 import AuthService from '../services/AuthService.js';
+import VirtualKeyboard from './VirtualKeyboard.js';
+import { List } from 'react-native-paper';
 
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        //flex: 1,
+        width: '40%',
+        //backgroundColor: 'gray',
+        //marginRight: 200
     },
     inner: {
-        flex: 1,
+        //flex: 1,
+        //marginLeft: 50,
+        //marginRight: 100,
+        width: '100%',
         justifyContent: 'center',
-        top: -110,
+        top: 100,
+        //marginHorizontal: 20,
+        marginRight: 200,
+        marginLeft: 40
     },
     input: {
-        width: '85%',
-        position: 'absolute',
-        left: '7%',
-        top: '130%',
+        //position: 'absolute',
+        //left: '7%',
+        //top: '130%',
         color: 'white'
-    },
-    buttonContainer:{
-        marginTop: '50%',
-        color: 'white',
-        width: '85%',
-        position: 'absolute',
     }
 });
 
@@ -44,84 +48,38 @@ export default class Home extends ValidationComponent {
         this.authService = new AuthService();
 
         this.state = {
-            selectedIndex: 0,
-            email: "",
             phone: "",
             isValidPhoneNumber: true,
             isConfirmVisible: false,
             confirmText: "",
             isLogoutVisible: false,
-            logoutText: ""
-            
+            logoutText: ""      
         };
 
         /**
          * Pass this to the functions, so functions know that what is `this`
          */
-        this.updateIndex = this.updateIndex.bind(this);
         this.lemmeIn = this.lemmeIn.bind(this);
-
-    };
-
-    updateIndex (selectedIndex) {
-
-        this.setState({selectedIndex});
-
-        // user has selected `Phone Number`
-        if(selectedIndex == 0) {
-
-            this.setState({ 
-                email: "",
-            });
-
-            this.validate({
-                email: {required: false}
-            })
-
-        }
-        // user has selected `Email Address`
-        else 
-        {
-
-            this.setState({
-                isValidPhoneNumber: true,
-                phone: "",
-            });
-
-        }
 
     };
 
     async lemmeIn () {
 
-        if (this.state.selectedIndex == 0) { 
-            
-            if (this.isValidPhoneNumber()) {
-                this.setState({isValidPhoneNumber: true});
-            }
-            else {
-                this.setState({isValidPhoneNumber: false});
-            }
 
+        if (this.isValidPhoneNumber()) {
+            this.setState({isValidPhoneNumber: true});
         }
         else {
-            this.validate({
-                email: {email: true}
-            })
+            this.setState({isValidPhoneNumber: false});
         }
       
         setTimeout( async () => {
 
-            if (!this.isFieldInError("email") && this.state.isValidPhoneNumber) {
+            if (this.state.isValidPhoneNumber) {
 
-                const isPhoneNumber = this.state.selectedIndex == 0 ? true : false;
+                let phoneNumber = this.state.phone.split('+1 ')[0] != this.state.phone ? this.state.phone.split('+1 ')[1] : this.state.phone;
 
-                let phoneNumber = "";
-                if (isPhoneNumber) {
-                    phoneNumber = this.state.phone.split('+1 ')[0] != this.state.phone ? this.state.phone.split('+1 ')[1] : this.state.phone;
-                }
-
-                const confirmSubtext = isPhoneNumber ? "phone number: " + this.state.phone : "email: " + this.state.email;
+                const confirmSubtext = "phone number: " + this.state.phone;
 
                 this.setState({
                     isConfirmVisible: true, 
@@ -132,26 +90,24 @@ export default class Home extends ValidationComponent {
                 const username = await this.authService.getCurrentUsername();
                 
                 try {
-                    let customers = isPhoneNumber
-                    ? await userService.showOrAddCustomer({phoneNumber:phoneNumber, username:username})
-                    : await userService.showOrAddCustomer({email:this.state.email.toLowerCase(), username:username});
-        
-                        if (customers[0].isNew) {       
-                            this.setState({
-                                isConfirmVisible: true,                    
-                                confirmText: "Email was sent successfully.\n\n Welcome in!"
-                            });
-        
-                            setTimeout(() => {
-                                this.setState({
-                                    isConfirmVisible: false,                         
-                                    confirmText: "",
-                                    email: "",
-                                });
-                            }, 3000);    
+                    let customers = await userService.showOrAddCustomer({phoneNumber:phoneNumber, username:username})
+
+                    if (customers[0].isNew) {       
+                        this.props.navigation.navigate("CustomerScreen", {customerList: customers}); 
                     }
                     else {    
-                        this.props.navigation.navigate("CustomerListScreen", {customerList: customers, selectedIndex: this.state.selectedIndex});   
+                        this.setState({
+                            isConfirmVisible: true,                    
+                            confirmText: "Welcome in!"
+                        });
+    
+                        setTimeout(() => {
+                            this.setState({
+                                isConfirmVisible: false,                         
+                                confirmText: "",
+                                phone:""
+                            });
+                        }, 3000);   
                     }
                 }
                 catch(error) {
@@ -172,10 +128,8 @@ export default class Home extends ValidationComponent {
     };
 
     onPhoneChange = (text) => {
-
         const phoneNumber = this.formatPhoneNumber(text);
         phoneNumber != null ? this.setState({phone: phoneNumber}) : this.setState({phone: text});
-
     }
 
     formatPhoneNumber = (phoneNumberString) => {
@@ -218,63 +172,77 @@ export default class Home extends ValidationComponent {
 
     render () {
         return (
-            <LinearGradient colors={['#043030FF', '#6f6d6dFF', '#6f6d6dFF', '#043030FF']} style={{position: 'absolute', left: 0, right: 0, top: 0, height: '100%'}} >
-                <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"}
-                                        keyboardVerticalOffset={
-                                            Platform.select({
-                                                ios: () => {
-                                                    if(this.state.selectedIndex == 0) {
-                                                        return 150;
-                                                    }
-                                                    else{
-                                                        return 140;
-                                                    }
-                                                }
-                                            })()
-                                        }
-                                        style={styles.container}>
-                    
+            <LinearGradient colors={['#05346E', '#2B93C1', '#82B7A8']} style={{position: 'absolute', left: 0, right: 0, top: 0, height: '100%', flexDirection: 'row'}} >
+                <ScrollView style={{width: '100%'}} directionalLockEnabled={false} horizontal={true} showsHorizontalScrollIndicator={false} bounces={false}>
+                    <ScrollView style={{width: '40%', marginVertical: 200,  marginLeft: 20, marginRight: 100}} showsVerticalScrollIndicator={false} bounces={false}>
+                        <List.Item
+                            //titleNumberOfLines='2'
+                            title="5 Times"
+                            titleStyle={{color: 'white'}}
+                            description="get 10% off"
+                            descriptionStyle={{color: 'white'}}
+                            left={props => <List.Icon {...props} icon="gift-outline" color='white' />}
+                            titleEllipsizeMode={'head'}
+                            style={{paddingVertical: 20, borderWidth: 1}}
+                        />
+                        <List.Item
+                            title="10 Times"
+                            titleStyle={{color: 'white'}}
+                            description="get 15% off"
+                            descriptionStyle={{color: 'white'}}
+                            left={props => <List.Icon {...props} icon="wallet-giftcard" color='white' />}
+                            style={{paddingVertical: 20, borderWidth: 1}}
+                        />
+                        <List.Item
+                            title="20 Times"
+                            titleStyle={{color: 'white'}}
+                            description="get 20% off"
+                            descriptionStyle={{color: 'white'}}
+                            left={props => <List.Icon {...props} icon="folder" color='white' />}
+                            style={{paddingVertical: 20, borderWidth: 1}}
+                        />
+                        <List.Item
+                            title="20 Times"
+                            titleStyle={{color: 'white'}}
+                            description="get 20% off"
+                            descriptionStyle={{color: 'white'}}
+                            left={props => <List.Icon {...props} icon="folder" color='white' />}
+                            style={{paddingVertical: 20, borderWidth: 1}}
+                        />
+                        <List.Item
+                            title="20 Times"
+                            titleStyle={{color: 'white'}}
+                            description="get 20% off"
+                            descriptionStyle={{color: 'white'}}
+                            left={props => <List.Icon {...props} icon="folder" color='white' />}
+                            style={{paddingVertical: 20, borderWidth: 1}}
+                        />               
+                    </ScrollView>
+
+                    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
                         <View style={styles.inner}>
+                            <View style={{marginBottom: 20}}>
+                                <Logo />
+                                {/* <TouchableOpacity onPress={ () => {this.showLogout()}}>
+                            
+                                </TouchableOpacity> */}
+                            </View>
                             <View style={{ height:0 }}>
                                 <Confirm isVisible={this.state.isConfirmVisible} text={this.state.confirmText} />
                                 <ConfirmLogout isVisible={this.state.isLogoutVisible} text={this.state.logoutText} done={this.logoutDone} cancel={this.hideLogout} />
                             </View>
-
-                            <TouchableOpacity onPress={ () => {this.showLogout()}}>
-                                <Logo />
-                            </TouchableOpacity>
-
                             <View>
-                                <View>
-                                    <ButtonGroup onPress={this.updateIndex} selectedIndex={this.state.selectedIndex} selectedButtonStyle={{backgroundColor:'#376363FF', color: 'white'}}
-                                                buttons={["Phone Number", "Email Address"]} containerStyle={{height: 100, borderColor: '#6f6d6dFF'}} />
-                                    
-                                    {this.state.selectedIndex == 1 
-                                        ?
-                                            <Input ref="email" containerStyle={styles.input} labelStyle={{color: 'white'}} label={"Email Address"}
-                                                placeholder={"email@address.com"} inputStyle={{color:'white'}}
-                                                leftIcon={<Icon name={"envelope"} size={24} color='white' />}
-                                                keyboardType={"email-address"}
-                                                onChangeText={ text => this.setState({email: text}) } 
-                                                value={this.state.email}
-                                                errorMessage={this.isFieldInError('email') ? this.getErrorMessages() : ""} />
-                                        :
-                                            <Input ref="phone" containerStyle={styles.input} labelStyle={{color: 'white'}} label={"Phone Number"}
-                                                placeholder={"(512) 123-4567"} inputStyle={{color:'white'}}
-                                                leftIcon={<Icon name={"phone"} size={24} color='white' />}
-                                                keyboardType={"phone-pad"} returnKeyType={"done"}
-                                                onChangeText={ (text) => {this.onPhoneChange(text)} } 
-                                                value={this.state.phone}
-                                                errorMessage={!this.state.isValidPhoneNumber ? "The field \"phone\" must be a valid phone number." : ""} />
-                                    }                         
-                                </View>
-                                <View style={{alignItems:'center'}}>
-                                    <Button containerStyle={styles.buttonContainer} buttonStyle={{backgroundColor:'#376363FF'}} title="Lemme In" onPress={this.lemmeIn} />
-                                </View>
+                                <Input containerStyle={styles.input} labelStyle={{color: 'white'}} label={"Phone Number:"}
+                                    placeholder={"(512) 123-4567"} inputStyle={{color:'white', marginLeft: 5}}
+                                    inputContainerStyle={{borderColor: 'white'}}
+                                    leftIcon={<Icon name={"phone"} size={24} color='white' />}
+                                    value={this.state.phone} editable={false}
+                                    errorMessage={!this.state.isValidPhoneNumber ? "The field \"phone\" must be a valid phone number." : ""} />    
+                                <VirtualKeyboard onPress={(text) => {this.onPhoneChange(text)}} lemmein={this.lemmeIn} />                                 
                             </View>
                         </View>
-                    
-                </KeyboardAvoidingView>
+                    </ScrollView>        
+                </ScrollView>             
             </LinearGradient>
         );
     }      

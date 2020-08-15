@@ -7,7 +7,7 @@ export default class Logo extends Component {
     render () {
         return (
             <View style={{alignItems: 'center' }}>
-                <Image source={require('../assets/lemme-in-logo.png')} style={{ width: 200, height: 200, marginBottom: 50 }}/>
+                <Image source={require('../assets/lemme-in-logo.png')} style={{ width: 150, height: 150}}/>
             </View>
         );
     };
