@@ -222,10 +222,9 @@ export default class Home extends ValidationComponent {
                     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
                         <View style={styles.inner}>
                             <View style={{marginBottom: 20}}>
-                                <Logo />
-                                {/* <TouchableOpacity onPress={ () => {this.showLogout()}}>
-                            
-                                </TouchableOpacity> */}
+                                <TouchableOpacity onPress={ () => {this.showLogout()}}>
+                                    <Logo />
+                                </TouchableOpacity>
                             </View>
                             <View style={{ height:0 }}>
                                 <Confirm isVisible={this.state.isConfirmVisible} text={this.state.confirmText} />
@@ -235,6 +234,7 @@ export default class Home extends ValidationComponent {
                                 <Input containerStyle={styles.input} labelStyle={{color: 'white'}} label={"Phone Number:"}
                                     placeholder={"(512) 123-4567"} inputStyle={{color:'white', marginLeft: 5}}
                                     inputContainerStyle={{borderColor: 'white'}}
+                                    clearButtonMode="always"
                                     leftIcon={<Icon name={"phone"} size={24} color='white' />}
                                     value={this.state.phone} editable={false}
                                     errorMessage={!this.state.isValidPhoneNumber ? "The field \"phone\" must be a valid phone number." : ""} />    
