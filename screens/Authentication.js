@@ -122,14 +122,16 @@ export default class Authentication extends ValidationComponent {
                                 <Input containerStyle={[styles.input, {marginTop:20}]} labelStyle={{color: 'white'}} label={"Username"}
                                         placeholder={"John Doe"} inputStyle={{color:'white', marginLeft: 5}}
                                         inputContainerStyle={{borderColor: 'white'}}
+                                        clearButtonMode="always"
                                         leftIcon={<Icon name={"user"} size={24} color='white' />}
                                         onChangeText={ text => this.setState({username: text}) } 
                                         value={this.state.username}
                                         errorMessage={this.isFieldInError('username') ? this.getErrorsInField('username')[0] : ""} 
                                         />
                                 <Input containerStyle={styles.input} labelStyle={{color: 'white'}} label={"Password"}
-                                        placeholder={"*******"} inputStyle={{color:'white', marginLeft: 5}} secureTextEntry={true}
+                                        placeholder={"******"} inputStyle={{color:'white', marginLeft: 5}} secureTextEntry={true}
                                         inputContainerStyle={{borderColor: 'white'}}
+                                        clearButtonMode="always"
                                         leftIcon={<Icon name={"lock"} size={26} color='white' />}
                                         onChangeText={ text => this.setState({password: text}) } 
                                         value={this.state.password}

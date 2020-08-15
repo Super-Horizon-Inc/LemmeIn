@@ -4,7 +4,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { Input, Button } from 'react-native-elements';
 import { LinearGradient } from 'expo-linear-gradient';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { TextInputMask } from 'react-native-masked-text'
+import ValidationComponent from 'react-native-form-validator';
+import moment from "moment";
 
 
 const styles = StyleSheet.create({
@@ -13,13 +14,12 @@ const styles = StyleSheet.create({
     },
     inner: {
         flex: 1,
-        //backgroundColor: '#fff',
         justifyContent: 'center',
         top: -110,
     },
 });
 
-export default class Customer extends Component {
+export default class Customer extends ValidationComponent {
 
     constructor(props) {
 
@@ -32,13 +32,25 @@ export default class Customer extends Component {
             email: "",
             phone: this.props.navigation.state.params.customerList[0].phoneNumber,
             show: false,
-            backspace: false
+            backspace: false,
+            isValidDob: true,
         };
 
     }
     
     submit = () => {
-        this.props.navigation.navigate('HomeScreen');
+        this.validate({
+            firstName: {maxlength: 50, required: true},
+            lastName: {maxlength: 50, required: true},
+            dob: {date: 'mm/dd/yyyy', required: true},
+            email: {email: true, required: false}
+        })
+        this.validateDob();
+
+        if(this.isFormValid() && this.state.isValidDob) {
+            this.props.navigation.navigate('HomeScreen');
+        }
+        
     }
 
     showDatePicker = () => {
@@ -53,27 +65,13 @@ export default class Customer extends Component {
         })
     }
 
-    // onConfirm = (date) => {
-    //     let month = date.getMonth() + 1;
-    //     let day = date.getDate();
-    //     let year = date.getFullYear();
-    //     month = month < 10 ? "0" + month : month;
-    //     day = day < 10 ? "0" + day : day;
-    //     //const dateString = year + '-' + month + '-' + day;
-    //     const dateString = month + '/' + day + '/' + year;
-
-    //     this.setState({
-    //         dob: dateString
-    //     });
-    //     this.hideDatePicker();
-    // }
-
     onConfirm = (date) => {
         let dateString = new Intl.DateTimeFormat('en-us', {
             year: 'numeric',
             month: "2-digit",
             day: "2-digit"
         }).format(date);
+
         this.setState({
             dob: dateString
         });
@@ -86,6 +84,13 @@ export default class Customer extends Component {
             curText += '/';
         }
         this.setState({dob: curText})
+    }
+
+    validateDob = () => {
+        let dateString = moment(this.state.dob, 'MM/DD/YYYY', true);
+        this.setState({
+            isValidDob: dateString.isValid()
+        });
     }
 
 
@@ -107,17 +112,21 @@ export default class Customer extends Component {
                             <Input label="First Name" labelStyle={{color: 'white'}} 
                                     placeholder="Jon" inputStyle={{color:'white', marginLeft: 5}}
                                     inputContainerStyle={{borderColor: 'white'}}
+                                    clearButtonMode="always"
                                     leftIcon={<Icon name='user' size={24} color='white' />}
                                     onChangeText={text => this.setState({firstName: text})}
                                     value={this.state.firstName}
+                                    errorMessage={this.isFieldInError('firstName') ? this.getErrorsInField('firstName')[0] : ""}
                             />
 
                             <Input label="Last Name" labelStyle={{color: 'white'}} 
                                     placeholder="Doe" inputStyle={{color:'white', marginLeft: 5}}
                                     inputContainerStyle={{borderColor: 'white'}}
+                                    clearButtonMode="always"
                                     leftIcon={<Icon name='user' size={24} color='white' />}
                                     onChangeText={text => this.setState({lastName: text})}
                                     value={this.state.lastName}
+                                    errorMessage={this.isFieldInError('lastName') ? this.getErrorsInField('lastName')[0] : ""}
                             />
 
                             <Input label="DOB (mm/dd/yyyy)" labelStyle={{color: 'white'}} 
@@ -131,23 +140,9 @@ export default class Customer extends Component {
                                     keyboardType="number-pad" returnKeyType="done"
                                     onChangeText={ text => {this.inputDob(text)} }
                                     onKeyPress={ ({ nativeEvent }) => {nativeEvent.key === 'Backspace' ? this.setState({backspace: true}) : this.setState({backspace: false});} }
-                                    value={this.state.dob} 
-                            />
-                            {/* <View>
-                                <Text>DOB</Text>
-                                <TextInputMask
-                                    type={'datetime'}
-                                    options={{
-                                        format:'MM/DD/YYYY'
-                                    }}
                                     value={this.state.dob}
-                                    onChangeText={text => {
-                                        this.setState({
-                                            dob: text
-                                        })
-                                    }}
-                                />
-                            </View> */}
+                                    errorMessage={ (this.isFieldInError('dob') || !this.state.isValidDob) ? "The field \"DOB\" must be a valid date (mm/dd/yyyy)." : ""}
+                            />
                             <DateTimePickerModal
                                 isVisible={this.state.show}
                                 //minimumDate={new Date(0)}
@@ -160,10 +155,12 @@ export default class Customer extends Component {
                             <Input label="Email Address (optional)" labelStyle={{color: 'white'}} 
                                     placeholder="email@address.com" inputStyle={{color:'white', marginLeft: 5}}
                                     inputContainerStyle={{borderColor: 'white'}}
+                                    clearButtonMode="always"
                                     leftIcon={<Icon name="envelope" size={24} color="white" />}
                                     keyboardType="email-address"
                                     onChangeText={ text => this.setState({email: text}) }
-                                    value={this.state.email} 
+                                    value={this.state.email}
+                                    errorMessage={this.isFieldInError('email') ? this.getErrorsInField('email')[0] : ""} 
                             />
 
                         </View>
