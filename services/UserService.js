@@ -9,7 +9,7 @@ export default class UserService {
         
         let header = await AuthHeader();
 
-        return await fetch('https://f4329af93339.ngrok.io/lemme/customers', {
+        return await fetch('https://71178d6ca3e4.ngrok.io/lemme/customers', {
             method: 'POST',
             headers: {
                 Accept : 'application/json',
@@ -30,7 +30,7 @@ export default class UserService {
 
         let header = await AuthHeader();
 
-        return await fetch('https://f4329af93339.ngrok.io/lemme/customers/email', {
+        return await fetch('https://71178d6ca3e4.ngrok.io/lemme/customers/email', {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',

@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     buttonContainer:{
         marginTop: '20%',
         width: '85%',
-        position: 'absolute',
+        position: 'absolute'
     }
 });
 
@@ -101,7 +101,7 @@ export default class Authentication extends ValidationComponent {
 
     render () {
         return (
-            <LinearGradient colors={['#043030FF', '#6f6d6dFF', '#6f6d6dFF', '#043030FF']} style={{position: 'absolute', left: 0, right: 0, top: 0, height: '100%'}} >
+            <LinearGradient colors={['#05346E', '#2B93C1', '#82B7A8']} style={{position: 'absolute', left: 0, right: 0, top: 0, height: '100%'}} >
                 <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"} 
                     // keyboardVerticalOffset={
                     //     Platform.select({
@@ -120,14 +120,16 @@ export default class Authentication extends ValidationComponent {
                         <View>
                             <View>                            
                                 <Input containerStyle={[styles.input, {marginTop:20}]} labelStyle={{color: 'white'}} label={"Username"}
-                                        placeholder={"John Doe"} inputStyle={{color:'white'}}
+                                        placeholder={"John Doe"} inputStyle={{color:'white', marginLeft: 5}}
+                                        inputContainerStyle={{borderColor: 'white'}}
                                         leftIcon={<Icon name={"user"} size={24} color='white' />}
                                         onChangeText={ text => this.setState({username: text}) } 
                                         value={this.state.username}
                                         errorMessage={this.isFieldInError('username') ? this.getErrorsInField('username')[0] : ""} 
                                         />
                                 <Input containerStyle={styles.input} labelStyle={{color: 'white'}} label={"Password"}
-                                        placeholder={"*******"} inputStyle={{color:'white'}} secureTextEntry={true}
+                                        placeholder={"*******"} inputStyle={{color:'white', marginLeft: 5}} secureTextEntry={true}
+                                        inputContainerStyle={{borderColor: 'white'}}
                                         leftIcon={<Icon name={"lock"} size={26} color='white' />}
                                         onChangeText={ text => this.setState({password: text}) } 
                                         value={this.state.password}
@@ -136,7 +138,7 @@ export default class Authentication extends ValidationComponent {
                             </View>
                                 
                             <View style={{alignItems:'center'}}>
-                                <Button containerStyle={styles.buttonContainer} buttonStyle={{backgroundColor:'#376363FF'}} title="Sign In" onPress={this.lemmeIn} />
+                                <Button containerStyle={styles.buttonContainer} buttonStyle={{backgroundColor:'white'}} title="Sign In" titleStyle={{color: '#2B93C1'}} onPress={this.lemmeIn} />
                             </View>
                         </View>
                         
