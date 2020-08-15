@@ -10,10 +10,9 @@ export default class AuthService {
     getCurrentUsername = async () => {
         return await AsyncStorage.getItem('username');
     }
-    
 
     signin = () => {
-        const result = fetch("https://f4329af93339.ngrok.io/lemme/user/auth/signin", {
+        const result = fetch("https://71178d6ca3e4.ngrok.io/lemme/user/auth/signin", {
             method: 'POST',
             headers: {
                 Accept : 'application/json',
@@ -42,7 +41,7 @@ export default class AuthService {
 
 
     logout = async (input) => {
-        return await fetch("https://f4329af93339.ngrok.io/lemme/user/auth/logout", {
+        return await fetch("https://71178d6ca3e4.ngrok.io/lemme/user/auth/logout", {
             method: 'POST',
             headers: {
                 Accept : 'application/json',
