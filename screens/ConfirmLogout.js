@@ -2,16 +2,16 @@ import React, { Component } from 'react';
 import { StyleSheet, View, Modal, Text, TextInput } from 'react-native';
 import { Input, Button } from 'react-native-elements';
 
+
 const styles = StyleSheet.create({
     centeredView: {
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
-      //marginTop: 22,
-      backgroundColor: '#6f6d6dFF',
+      backgroundColor: "rgba(0,0,0,0)"
     },
     modalView: {
-      backgroundColor:'#043030FF',
+      backgroundColor: '#05346E',
       margin: 20,
       borderRadius: 20,
       padding: 35,
@@ -45,13 +45,10 @@ const styles = StyleSheet.create({
 export default class ConfirmLogout extends Component {
 
     constructor(props) {
-
         super(props);
-
         this.state ={
             text:""
         }
-
     }
 
     render () {
@@ -68,14 +65,18 @@ export default class ConfirmLogout extends Component {
                             <View>
                                 <Input containerStyle={{width: 200, color: 'white'}} labelStyle={{color: 'white'}}
                                             inputStyle={{color:'white'}} secureTextEntry={true}
+                                            inputContainerStyle={{borderColor: 'white'}}
+                                            clearButtonMode="while-editing" 
                                             onChangeText={ text => { this.setState({text:text})} } 
                                             value={this.state.text}
                                 />
                                 <Text style = {styles.messageText}>{ this.props.text }</Text>
                             </View>
                             <View style={{flexDirection:'row', marginTop: 30}}>
-                                <Button buttonStyle={{backgroundColor:'#376363FF'}} containerStyle={{width:'30%', marginHorizontal:10}} title='Done' onPress={() => this.props.done(this.state.text)} />
-                                <Button buttonStyle={{backgroundColor:'#376363FF'}} containerStyle={{width:'30%', marginHorizontal:10}} title='Cancel' onPress={this.props.cancel} /> 
+                                <Button buttonStyle={{backgroundColor:'white'}} containerStyle={{width:'30%', marginHorizontal:10}} 
+                                        title='Done' titleStyle={{color: '#05346E'}} onPress={() => this.props.done(this.state.text)} />
+                                <Button buttonStyle={{backgroundColor:'white'}} containerStyle={{width:'30%', marginHorizontal:10}} 
+                                        title='Cancel' titleStyle={{color: '#05346E'}} onPress={this.props.cancel} /> 
                             </View>
                         </View>
                     </View>

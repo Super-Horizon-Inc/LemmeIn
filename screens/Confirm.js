@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Modal, Text, ActivityIndicator } from 'react-native';
 
+
 const styles = StyleSheet.create({
     centeredView: {
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
-      //marginTop: 22,
-      backgroundColor: '#6f6d6dFF',
+      backgroundColor: "rgba(0,0,0,0)"
     },
     modalView: {
-      backgroundColor:'#043030FF',
+      backgroundColor: '#05346E',
       margin: 20,
       borderRadius: 20,
       padding: 35,
@@ -47,7 +47,7 @@ export default class Confirm extends Component {
                 <Modal transparent = {true} visible = { this.props.isVisible } supportedOrientations={["portrait", "landscape"]}>
                     <View style={styles.centeredView}>
                         <View style={styles.modalView}>
-                            <ActivityIndicator size='large' color='#0000ff' />
+                            <ActivityIndicator size='large' color='white' style={{marginBottom: 10}}/>
                             <Text style = {styles.modalText}>{this.props.text}</Text>
                         </View>
                     </View>
