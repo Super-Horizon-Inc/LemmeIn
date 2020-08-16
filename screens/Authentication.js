@@ -2,11 +2,13 @@ import React from 'react';
 import { KeyboardAvoidingView, StyleSheet, View, Platform } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Input, Button } from 'react-native-elements';
-import Logo from './Logo.js';
-import Confirm from './Confirm.js';
 import ValidationComponent from 'react-native-form-validator';
 import { LinearGradient } from 'expo-linear-gradient';
+
+import Logo from './Logo.js';
+import Confirm from './Confirm.js';
 import AuthService from '../services/AuthService.js';
+
 
 const styles = StyleSheet.create({
     container: {
@@ -101,7 +103,8 @@ export default class Authentication extends ValidationComponent {
 
     render () {
         return (
-            <LinearGradient colors={['#05346E', '#2B93C1', '#82B7A8']} style={{position: 'absolute', left: 0, right: 0, top: 0, height: '100%'}} >
+            <LinearGradient colors={['#05346E', '#2B93C1', '#82B7A8']} 
+                            style={[{position: 'absolute', left: 0, right: 0, top: 0, height: '100%'}, this.state.isConfirmVisible == true ? {opacity: 0.5} : {opacity: 1}]} >
                 <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"} 
                     // keyboardVerticalOffset={
                     //     Platform.select({
@@ -122,7 +125,7 @@ export default class Authentication extends ValidationComponent {
                                 <Input containerStyle={[styles.input, {marginTop:20}]} labelStyle={{color: 'white'}} label={"Username"}
                                         placeholder={"John Doe"} inputStyle={{color:'white', marginLeft: 5}}
                                         inputContainerStyle={{borderColor: 'white'}}
-                                        clearButtonMode="always"
+                                        clearButtonMode="while-editing"
                                         leftIcon={<Icon name={"user"} size={24} color='white' />}
                                         onChangeText={ text => this.setState({username: text}) } 
                                         value={this.state.username}
@@ -131,7 +134,7 @@ export default class Authentication extends ValidationComponent {
                                 <Input containerStyle={styles.input} labelStyle={{color: 'white'}} label={"Password"}
                                         placeholder={"******"} inputStyle={{color:'white', marginLeft: 5}} secureTextEntry={true}
                                         inputContainerStyle={{borderColor: 'white'}}
-                                        clearButtonMode="always"
+                                        clearButtonMode="while-editing"
                                         leftIcon={<Icon name={"lock"} size={26} color='white' />}
                                         onChangeText={ text => this.setState({password: text}) } 
                                         value={this.state.password}
