@@ -9,7 +9,7 @@ export default class UserService {
         
         let header = await AuthHeader();
 
-        return await fetch('https://d6cdd9bffbb8.ngrok.io/lemme/customers', {
+        return await fetch('https://7540ec14ee42.ngrok.io/lemme/customers', {
             method: 'POST',
             headers: {
                 Accept : 'application/json',
@@ -19,29 +19,28 @@ export default class UserService {
             body: JSON.stringify(input)
         })
         .then(response => response.json())
-        .then(json => {
-            return json;
-        })
+        .then(json => {return json})
         .catch(error => {console.error(error)});
 
     }
 
-    sendEmailCustomer = async (input) => {
+    updateCustomer = async (customer) => {
 
         let header = await AuthHeader();
 
-        return await fetch('https://d6cdd9bffbb8.ngrok.io/lemme/customers/email', {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type' : 'application/json',
-                    'Authorization': header.Authorization
-                },
-                body: JSON.stringify(input)
-            })
-            .then(response => response.text())
-            .then(text => {return text})
-            .catch(error => {console.error(error)});
+        return await fetch('https://7540ec14ee42.ngrok.io/lemme/customers/update', {
+            method: 'PUT',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type' : 'application/json',
+                'Authorization': header.Authorization
+            },
+            body: JSON.stringify(customer)
+        })
+        .then(response => response.json())
+        .then(json => {return json})
+        .catch(error => {console.error(error)});
+
     }
 
 }
