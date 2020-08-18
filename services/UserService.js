@@ -9,7 +9,7 @@ export default class UserService {
         
         let header = await AuthHeader();
 
-        return await fetch('https://7540ec14ee42.ngrok.io/lemme/customers', {
+        return await fetch('https://d0088e166c80.ngrok.io/lemme/customers', {
             method: 'POST',
             headers: {
                 Accept : 'application/json',
@@ -28,7 +28,7 @@ export default class UserService {
 
         let header = await AuthHeader();
 
-        return await fetch('https://7540ec14ee42.ngrok.io/lemme/customers/update', {
+        return await fetch('https://d0088e166c80.ngrok.io/lemme/customers/update', {
             method: 'PUT',
             headers: {
                 Accept: 'application/json',
